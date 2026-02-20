@@ -36,19 +36,6 @@
 
       /* portada */
       --coverH: 300px; /* ✅ Tamaño del espacio de la foto de portada */
-
-      /* 2) (Opcional pero recomendado) asegura centrado */
-      .cover-imgwrap img{
-      object-fit: contain;
-      object-position: center;
-    }
-
-    /* 3) Ajusta también los valores responsive (para que no se encoja en móvil) */
-    @media (max-width: 860px){
-      :root{ --coverH: 240px; } /* antes 150px */
-    }
-    @media (max-width: 560px){
-      :root{ --coverH: 250px; } /* antes 160px */
     }
 
     *{box-sizing:border-box}
@@ -269,8 +256,6 @@
 
     /* =========================================================
        INICIO BLOQUE: PORTADA (Nuestra Historia)
-       - ✅ Foto más pequeña (proporcional, sin “cortar arriba”)
-       - ✅ Texto aprovecha el espacio (sin hueco)
        ========================================================= */
     .cover{
       background: linear-gradient(180deg, var(--card), var(--card2));
@@ -282,10 +267,10 @@
     }
     .cover-top{
       display:grid;
-      grid-template-columns: 1.65fr .85fr; /* ✅ más espacio para el texto */
+      grid-template-columns: 1.65fr .85fr;
       gap: 10px;
       padding: 14px;
-      align-items:start; /* ✅ evita huecos verticales */
+      align-items:start;
     }
     .cover-imgwrap{
       border-radius: 16px;
@@ -298,13 +283,14 @@
     .cover-imgwrap img{
       width:100%;
       height:100%;
-      object-fit:contain;  /* ✅ proporcional, sin recortar */
+      object-fit:contain;
+      object-position:center;
       display:block;
       background: rgba(0,0,0,.02);
     }
     .cover-side{
       display:flex; flex-direction:column; gap:10px;
-      justify-content:flex-start; /* ✅ no estirar dejando huecos */
+      justify-content:flex-start;
     }
     .cover-side h2{margin:0; font-size:16px; letter-spacing:.2px;}
     .cover-side p{margin:6px 0 0 0; color:var(--muted); font-size:12px; line-height:1.35;}
@@ -402,7 +388,6 @@
 
     /* =========================
        LAYOUT (columnas auto-anchas por C)
-       - ✅ cada C crece según su subárbol
        ========================= */
     .treeGrid{
       display:grid;
@@ -452,7 +437,6 @@
     }
     .circle img{width:100%; height:100%; object-fit:cover; display:block;}
 
-    /* ✅ Nombres largos en 2 líneas, sin extender al horizonte */
     .labelName{
       font-size: 12px;
       font-weight: 900;
@@ -554,7 +538,7 @@
       border-radius: 99px;
     }
 
-    /* ✅ Hijos en filas automáticas. --cols controla “hasta cuántos por fila” */
+    /* Hijos en filas automáticas. --cols controla “hasta cuántos por fila” */
     .childrenRow{
       display:grid;
       gap: 10px;
@@ -609,7 +593,6 @@
     }
     .modal.show{display:flex;}
 
-    /* ✅ MÁS ANGOSTO (antes 760px) */
     .modalPanel{
       margin:auto;
       width: min(520px, 100%);
@@ -817,7 +800,7 @@
     .bdayThumb img{ width:100%; height:100%; object-fit:cover; display:block; }
     .bdayTxt{ display:flex; flex-direction:column; gap:2px; }
     .bdayWho{ font-weight:900; font-size:12px; }
-    .bdayWhen{ font-size:11px; color: var(--muted); } /* ✅ solo fecha, sin etiqueta */
+    .bdayWhen{ font-size:11px; color: var(--muted); }
 
     .bdayCal{
       border:1px solid rgba(0,0,0,.10);
@@ -878,7 +861,7 @@
        INICIO BLOQUE: RESPONSIVE
        ========================================================= */
     @media (max-width: 860px){
-      :root{ --colW: 170px; --coverH: 150px; }
+      :root{ --colW: 170px; --coverH: 240px; }
       .cover-top{grid-template-columns: 1fr;}
       .searchWrap{ justify-content:flex-start; width:100%; }
       .searchInput{ width:100%; }
@@ -886,7 +869,7 @@
       .bdayGrid{ grid-template-columns: 1fr; }
     }
     @media (max-width: 560px){
-      :root{ --colW: 160px; --coverH: 160px; }
+      :root{ --colW: 160px; --coverH: 250px; }
       .lvl-parent .circle{ width:106px; height:106px; }
       .lvl-original .circle{ width:92px; height:92px; }
       .lvl-1 .circle{ width:62px; height:62px; }
@@ -933,24 +916,13 @@
   <main>
     <div class="container">
 
-      <!-- =========================================================
-           INICIO BLOQUE: TABS (UI)
-           ========================================================= -->
       <nav class="tabsBar" aria-label="Secciones">
         <button class="tabBtn" id="tabBtnTree"  type="button">Árbol genealógico</button>
         <button class="tabBtn" id="tabBtnStory" type="button">Nuestra Historia</button>
         <button class="tabBtn" id="tabBtnBday"  type="button">Calendario de cumpleaños</button>
       </nav>
-      <!-- =========================================================
-           FIN BLOQUE: TABS (UI)
-           ========================================================= -->
 
-
-      <!-- =========================================================
-           INICIO BLOQUE: TAB ÁRBOL
-           ========================================================= -->
       <section class="tabPane" id="tabTreePane" aria-label="Árbol genealógico">
-        <!-- ✅ Árbol completo dentro del viewport (zoom+pan+scroll) -->
         <section class="zoomArea">
           <div class="zoomViewport" id="zoomViewport" aria-label="Árbol (zoom y desplazamiento)">
             <div class="zoomSpacer" id="zoomSpacer">
@@ -963,14 +935,7 @@
           </div>
         </section>
       </section>
-      <!-- =========================================================
-           FIN BLOQUE: TAB ÁRBOL
-           ========================================================= -->
 
-
-      <!-- =========================================================
-           INICIO BLOQUE: TAB HISTORIA (PORTADA)
-           ========================================================= -->
       <section class="tabPane" id="tabStoryPane" aria-label="Nuestra Historia">
         <section class="cover">
           <div class="cover-top">
@@ -995,14 +960,7 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
           <div class="strip" id="first11Strip"></div>
         </section>
       </section>
-      <!-- =========================================================
-           FIN BLOQUE: TAB HISTORIA
-           ========================================================= -->
 
-
-      <!-- =========================================================
-           INICIO BLOQUE: TAB CUMPLEAÑOS
-           ========================================================= -->
       <section class="tabPane" id="tabBdayPane" aria-label="Cumpleaños">
         <section class="bdayCard" aria-label="Cumpleaños">
           <div class="bdayHead">
@@ -1023,9 +981,6 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
           </div>
         </section>
       </section>
-      <!-- =========================================================
-           FIN BLOQUE: TAB CUMPLEAÑOS
-           ========================================================= -->
 
     </div>
   </main>
@@ -1057,6 +1012,8 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
     };
 
     // ✅ HERRERA: modo libre (sin blindajes)
+    // Si lo pones en true, bloquea eliminar personas (solo permite quitar parejas)
+    // y bloquea agregar hijos de 1ª gen desde p1/p2.
     const LOCKS_ENABLED = false;
 
     const connDot  = document.getElementById("connDot");
@@ -1125,7 +1082,6 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
 
     /* =========================================================
        INICIO BLOQUE: TABS (LÓGICA)
-       - ✅ Árbol es protagonista (tab por defecto)
        ========================================================= */
     function setActiveTab(tab){
       const isTree  = tab === "tree";
@@ -1142,14 +1098,9 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
 
       try { localStorage.setItem("fh_tab", tab); } catch {}
 
-      // Al entrar al árbol, recalcular zoom para que no quede raro
       if (isTree) {
-        requestAnimationFrame(() => {
-          refreshZoomBounds(false);
-        });
+        requestAnimationFrame(() => refreshZoomBounds(false));
       }
-
-      // Al entrar a cumpleaños, repintar
       if (isBday) {
         requestAnimationFrame(() => renderBirthdays());
       }
@@ -1264,6 +1215,16 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       if (crypto?.randomUUID) return `${prefix}_${crypto.randomUUID()}`;
       return `${prefix}_${Date.now()}_${Math.random().toString(16).slice(2)}`;
     }
+
+    function isOriginal11(id){
+      if (!LOCKS_ENABLED) return false;
+      return /^c([1-9]|10|11)$/.test(id);
+    }
+
+    function isProtectedPersonId(id){
+      if (id === "p1" || id === "p2") return true;
+      return isOriginal11(id);
+    }
     /* =========================================================
        FIN BLOQUE: HELPERS
        ========================================================= */
@@ -1281,7 +1242,7 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
         death:"",
         photo_url: placeholderImg,
         photo_path:"",
-        spouse: null,     // pareja (objeto simple)
+        spouse: null,
         children:[]
       };
     }
@@ -1295,7 +1256,7 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
         photo_url: placeholderImg,
         photo_path:"",
         spouse: null,
-        children: [] // no se usa, pero lo dejamos para normalizar sin romper
+        children: []
       };
     }
 
@@ -1392,6 +1353,20 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
     }
 
     function addChildTo(parentId){
+      // Si agregan desde p1/p2 => agrega a la 1ª generación (state.children)
+      if (parentId === "p1" || parentId === "p2") {
+        if (LOCKS_ENABLED) {
+          alert("Bloqueado: no se agregan hijos de 1ª generación.");
+          return;
+        }
+        const nextIndex = (state.children?.length || 0) + 1;
+        const child = makePerson({ role: `Hijo/a ${nextIndex}` });
+        state.children.push(child);
+        renderAll();
+        scheduleSave();
+        return;
+      }
+
       const hit = findNodeById(parentId);
       if (!hit?.node) return;
       if (hit.isSpouse) return;
@@ -1435,26 +1410,39 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       scheduleSave();
     }
 
-    function isOriginal11(id){
-  if (!LOCKS_ENABLED) return false;
-  return /^c([1-9]|10|11)$/.test(id);
-}
-
-    /* ✅ BLINDAJE: hijos/descendientes NO se eliminan; parejas sí se pueden quitar */
     function removeNode(id){
       const hit = findNodeById(id);
       if (!hit) return;
 
+      // Parejas: siempre se pueden quitar
       if (hit.isSpouse) {
-        return removeSpouse(id); // ✅ parejas NO blindadas
+        return removeSpouse(id);
       }
 
-      if (id === "p1" || id === "p2") {
-        return alert("No se pueden eliminar los padres.");
+      if (isProtectedPersonId(id)) {
+        return alert("No se pueden eliminar los padres (y, si activas LOCKS, tampoco los 11 originales).");
       }
 
-      // ✅ A partir de aquí: cualquier persona (hijo/descendiente) queda blindada
-      return alert("Los hijos y descendientes no se eliminan (quedan blindados). Solo puedes quitar parejas.");
+      if (LOCKS_ENABLED) {
+        return alert("Bloqueado: no se eliminan personas. Solo puedes quitar parejas.");
+      }
+
+      const who = (hit.node.name || hit.node.role || hit.node.id);
+      const ok = confirm(`¿Eliminar a "${who}" y todo su subárbol?`);
+      if (!ok) return;
+
+      // Root (state.children) o cualquier parent.children
+      if (hit.parentChildrenArray) {
+        const idx = hit.parentChildrenArray.findIndex(x => x && x.id === id);
+        if (idx >= 0) hit.parentChildrenArray.splice(idx, 1);
+        renderAll();
+        scheduleSave();
+        return;
+      }
+
+      // Si llegara aquí, no sabemos dónde está (p1/p2 o error)
+      renderAll();
+      scheduleSave();
     }
     /* =========================================================
        FIN BLOQUE: FIND / PATCH / ADD / REMOVE
@@ -1474,8 +1462,10 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
 
       editorBody.innerHTML = "";
 
-      // ✅ BLINDADO: nunca mostrar botón "Eliminar" para personas (no parejas)
-      const removable = true;
+      // ✅ Coherente con LOCKS:
+      // - Pareja: siempre "Quitar pareja"
+      // - Persona: botón Eliminar solo si LOCKS desactivado y no es p1/p2 (y no está protegido)
+      const removable = (!hit.isSpouse) && (!LOCKS_ENABLED) && (!isProtectedPersonId(nodeId));
 
       const card = editorPersonCard(n, { removable, isSpouse: hit.isSpouse });
 
@@ -1516,7 +1506,11 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
         ? `<button class="smallbtn remove" data-action="removeSpouse" type="button">Quitar pareja</button>`
         : (removable ? `<button class="smallbtn remove" data-action="remove" type="button">Eliminar</button>` : `<span></span>`);
 
-      const addKidBtn = (!isSpouse)
+      // Agregar hijo:
+      // - Parejas: no
+      // - Con LOCKS: no dejar agregar desde p1/p2 (bloquea 1ª generación)
+      const canAddKid = (!isSpouse) && (!LOCKS_ENABLED || (node.id !== "p1" && node.id !== "p2"));
+      const addKidBtn = canAddKid
         ? `<button class="smallbtn addkid" data-action="addChild" type="button">+ Agregar hijo/a</button>`
         : ``;
 
@@ -1605,7 +1599,6 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
 
         patchNode(node.id, { [field]: input.value }, { render:false });
 
-        // ✅ si cambia nacimiento, refrescar cumpleaños (sin forzar rerender del árbol)
         if (field === "birth") renderBirthdays();
 
         scheduleSave();
@@ -1696,7 +1689,7 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       return wrap;
     }
     /* =========================================================
-       FIN BLOQUE: RENDER ÁRBOL (nodos / subárbol)
+       FIN BLOQUE: RENDER ÁRBOL
        ========================================================= */
 
 
@@ -2170,7 +2163,6 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       return out;
     }
 
-    /* ✅ Resultados: solo foto + nombre (sin role/ID) */
     function showResults(items){
       searchResults.innerHTML = "";
       if (!items.length) {
@@ -2417,5 +2409,3 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
   </script>
 </body>
 </html>
-
-
