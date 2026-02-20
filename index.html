@@ -1056,6 +1056,9 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       bucket: "family-photos"
     };
 
+    // ✅ HERRERA: modo libre (sin blindajes)
+    const LOCKS_ENABLED = false;
+
     const connDot  = document.getElementById("connDot");
     const connText = document.getElementById("connText");
 
@@ -1433,8 +1436,9 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
     }
 
     function isOriginal11(id){
-      return /^c([1-9]|10|11)$/.test(id);
-    }
+  if (!LOCKS_ENABLED) return false;
+  return /^c([1-9]|10|11)$/.test(id);
+}
 
     /* ✅ BLINDAJE: hijos/descendientes NO se eliminan; parejas sí se pueden quitar */
     function removeNode(id){
