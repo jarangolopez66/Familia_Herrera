@@ -477,26 +477,43 @@
     }
 
     /* =========================================================
-       INICIO BLOQUE: UNIT GRID (persona + esposas) + hijos debajo
+       INICIO BLOQUE: PERSONA CENTRADA + ESPOSAS LADOS + HILOS COLOR
        ========================================================= */
     .unitGrid{
+      position: relative;
       display:grid;
       grid-template-columns: repeat(var(--cols, 1), max-content);
-      column-gap: 12px;
-      row-gap: 8px;
+      column-gap: 14px;
+      row-gap: 10px;
       justify-content:center;
       align-items:start;
       width: max-content;
+      padding: 4px 2px;
     }
     .unitGrid .slot{
       display:flex;
       flex-direction:column;
       align-items:center;
       justify-content:flex-start;
+      width: max-content;
     }
 
-    /* esposas con marco punteado */
+    /* SVG de hilos (líneas persona->esposas) */
+    .unionSvg{
+      position:absolute;
+      inset: 0;
+      width: 100%;
+      height: 140px; /* se reajusta por JS */
+      pointer-events:none;
+      overflow: visible;
+      z-index: 1;
+    }
+    .slot > .node{ position:relative; z-index: 2; }
+
+    /* esposas con marco punteado y borde del color de unión */
     .spouseNode{ opacity:.98; }
+    .spouseNode .circle{ border-color: var(--uColor, rgba(0,0,0,.18)) !important; }
+
     .lvl-parent.spouseNode .circle{ border-width:3px; border-style:dashed; }
     .lvl-original.spouseNode .circle{ border-width:3px; border-style:dashed; }
     .lvl-1.spouseNode .circle{ border-width:3px; border-style:dashed; }
@@ -505,38 +522,39 @@
 
     .unionCaption{
       font-size:11px;
-      color: var(--muted);
+      color: var(--uColor, var(--muted));
       font-weight:900;
       text-align:center;
       margin: 2px 0 6px 0;
-      max-width: 210px;
+      max-width: 220px;
       white-space: normal;
     }
 
     .unionSlot{
+      --uColor: var(--treeLine);
       width: max-content;
       align-items:center;
     }
-    /* conector vertical desde esposa/persona hacia su grupo de hijos */
+    /* conector vertical hacia hijos */
     .unionSlot::before{
       content:"";
       display:block;
       width:0;
       height:12px;
       margin: 0 auto 6px auto;
-      border-left: 2px solid var(--treeLine);
+      border-left: 2px solid var(--uColor);
       border-radius: 99px;
     }
     .unionSlot.spouseUnion::before{
-      border-left-style: dashed;
-      border-left-color: rgba(0,0,0,.22);
+      border-left-style: solid;
+      opacity: .9;
     }
 
-    /* Grupo de hijos (solo con línea horizontal sobre los niños) */
+    /* Grupo de hijos (línea horizontal del color unión) */
     .childrenGroup{
       position:relative;
       width: max-content;
-      padding-top: 0px; /* ✅ ya lo conecta .unionSlot */
+      padding-top: 0px;
     }
     .childrenGroup::before{
       content:"";
@@ -545,21 +563,19 @@
       left: 12px;
       right: 12px;
       height:2px;
-      background: var(--treeLine);
+      background: var(--uColor, var(--treeLine));
       border-radius: 99px;
+      opacity:.95;
     }
-    .childrenGroup::after{ display:none; } /* ✅ evita doble conector vertical */
-
     .childrenRow{
       display:grid;
       gap: 10px;
       justify-content:center;
       align-items:start;
       margin-top: 10px;
-      grid-template-columns: repeat(var(--cols, 4), max-content);
+      grid-template-columns: repeat(var(--kidCols, 4), max-content);
       width: max-content;
     }
-
     .childWrap{
       position:relative;
       display:flex;
@@ -576,12 +592,13 @@
       left: 50%;
       width:2px;
       height:10px;
-      background: var(--treeLine);
+      background: var(--uColor, var(--treeLine));
       transform: translateX(-50%);
       border-radius: 99px;
+      opacity:.95;
     }
     /* =========================================================
-       FIN BLOQUE: UNIT GRID
+       FIN BLOQUE: PERSONA CENTRADA + ESPOSAS LADOS + HILOS COLOR
        ========================================================= */
 
     .flash{
@@ -901,6 +918,7 @@
       .searchInput{ width:100%; }
       .zoomViewport{ height: min(70vh, 780px); }
       .bdayGrid{ grid-template-columns: 1fr; }
+      .unionSvg{ height: 120px; }
     }
     @media (max-width: 560px){
       :root{ --colW: 160px; --coverH: 250px; }
@@ -910,6 +928,7 @@
       .lvl-2 .circle{ width:54px; height:54px; }
       .lvl-3 .circle{ width:46px; height:46px; }
       .zoomViewport{ height: min(72vh, 760px); }
+      .unionSvg{ height: 110px; }
     }
     /* =========================================================
        FIN BLOQUE: RESPONSIVE
@@ -1045,6 +1064,18 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
     };
 
     const LOCKS_ENABLED = false;
+
+    // Paleta para “hilos” por esposa (se repite si hay muchas)
+    const UNION_COLORS = [
+      "#4F86AA", // azul
+      "#B36D4C", // terracota
+      "#2F8F6B", // verde
+      "#7A5EA7", // púrpura
+      "#C6A24A", // dorado
+      "#B6463F", // rojo
+      "#3C7D7C", // teal
+      "#6B5F4A"  // café
+    ];
 
     const connDot  = document.getElementById("connDot");
     const connText = document.getElementById("connText");
@@ -1235,6 +1266,10 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       if (crypto?.randomUUID) return `${prefix}_${crypto.randomUUID()}`;
       return `${prefix}_${Date.now()}_${Math.random().toString(16).slice(2)}`;
     }
+
+    function unionColorByIndex(idx){
+      return UNION_COLORS[idx % UNION_COLORS.length];
+    }
     /* =========================================================
        FIN BLOQUE: HELPERS
        ========================================================= */
@@ -1277,7 +1312,7 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
         { ...makePerson({ id:"p1", role:"Padre" }) },
         { ...makePerson({ id:"p2", role:"Madre" }) },
       ],
-      children: [] // ✅ familia nueva: empieza vacío
+      children: [] // familia nueva: empieza vacío
     };
 
     let state = structuredClone(defaultState);
@@ -1302,7 +1337,7 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       if (node.photo_url === "") node.photo_url = placeholderImg;
       if (!("photo_path" in node)) node.photo_path = "";
 
-      // Migración suave: si existía "spouse" antiguo
+      // migración suave: antiguo node.spouse -> spouses[]
       if ("spouse" in node && node.spouse) {
         const one = normalizeSpouseObj(node.spouse);
         node.spouses = Array.isArray(node.spouses) ? node.spouses : [];
@@ -1349,7 +1384,7 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
             return { node: sp, parent: parentNode, parentChildrenArray: null, depth, isSpouse:true, spouseIndex: i };
           }
 
-          // Hijos de esa esposa
+          // hijos de esa esposa
           if (Array.isArray(sp?.children) && sp.children.length){
             for (const ch of sp.children){
               if (ch.id === id) {
@@ -1362,7 +1397,7 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
         }
       }
 
-      // Hijos sin esposa asociada
+      // hijos sin esposa asociada
       if (Array.isArray(parentNode.children) && parentNode.children.length){
         for (const child of parentNode.children) {
           if (child.id === id) {
@@ -1401,7 +1436,7 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       const hit = findNodeById(parentId);
       if (!hit?.node) return;
 
-      // si estás parado en esposa, agrega a esa unión
+      // si estás editando una esposa, agrega hijo a esa unión
       if (hit.isSpouse) return addChildToSpouse(hit.node.id);
 
       const parent = hit.node;
@@ -1542,14 +1577,16 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
         spousesHtml = `
           <div class="spouseList">
             <div style="font-size:12px; font-weight:900; color:var(--muted);">Esposas/Parejas</div>
-            ${node.spouses.map(s => {
+            ${node.spouses.map((s, idx) => {
               const nm = (s.name && s.name.trim()) ? s.name.trim() : "Sin nombre";
+              const c = unionColorByIndex(idx);
               return `
                 <div class="spouseItem">
                   <b>${escapeHtml(nm)}</b>
                   <div class="spouseBtns">
                     <button class="smallbtn spouse" data-action="openSpouse:${escapeAttr(s.id)}" type="button">Editar</button>
                     <button class="smallbtn addkid" data-action="addChildSpouse:${escapeAttr(s.id)}" type="button">+ Hijo</button>
+                    <span style="font-weight:900; font-size:11px; color:${c}; padding:2px 6px; border-radius:999px; border:1px solid rgba(0,0,0,.10); background:rgba(255,255,255,.55);">●</span>
                   </div>
                 </div>
               `;
@@ -1636,12 +1673,16 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
 
 
     /* =========================================================
-       INICIO BLOQUE: RENDER ÁRBOL (hijos debajo de cada esposa)
+       INICIO BLOQUE: RENDER ÁRBOL (persona centro, esposas lados, hilos color)
        ========================================================= */
-    function renderNodeCircle(node, cls){
+    function renderNodeCircle(node, cls, { uColor=null, isOwner=false, spouseIdx=null } = {}){
       const el = document.createElement("div");
       el.className = `node ${cls}`;
       el.dataset.id = node.id;
+
+      if (uColor) el.style.setProperty("--uColor", uColor);
+      if (isOwner) el.dataset.isOwner = "1";
+      if (spouseIdx !== null) el.dataset.spouseIdx = String(spouseIdx);
 
       const name = (node.name && node.name.trim()) ? node.name.trim() : "Sin nombre";
       const yrs  = yearRange(node.birth, node.death);
@@ -1667,28 +1708,17 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       if (depth === 2) return "lvl-2";
       return "lvl-3";
     }
-    function colsForKids(n){
-      if (n <= 0) return 0;
-      return Math.min(4, n);
-    }
+    function kidCols(n){ return Math.max(1, Math.min(4, n)); }
 
-    function renderChildrenGroup(children){
-      const group = document.createElement("div");
-      group.className = "childrenGroup";
-
-      const row = document.createElement("div");
-      row.className = "childrenRow";
-      row.style.setProperty("--cols", String(colsForKids(children.length)));
-
-      children.forEach(ch => {
-        const cw = document.createElement("div");
-        cw.className = "childWrap";
-        cw.appendChild(renderSubtree(ch, 0)); // profundidad se maneja arriba
-        row.appendChild(cw);
+    // Distribuye esposas alrededor del centro: alterna derecha/izquierda
+    function splitSpousesAroundCenter(spouses){
+      const left = [];  // [{sp, idx}]
+      const right = []; // [{sp, idx}]
+      spouses.forEach((sp, idx) => {
+        if (idx % 2 === 0) right.push({ sp, idx }); else left.push({ sp, idx });
       });
-
-      group.appendChild(row);
-      return group;
+      // izquierda invertida para que la más “cercana” al centro quede pegada al centro
+      return { left: left.reverse(), right };
     }
 
     function renderSubtree(node, depth = 0){
@@ -1698,37 +1728,62 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       const cls = depthClass(depth);
 
       const spouses = Array.isArray(node.spouses) ? node.spouses : [];
-      const cols = 1 + spouses.length;
+      const { left, right } = splitSpousesAroundCenter(spouses);
+
+      const cols = left.length + 1 + right.length;
 
       const grid = document.createElement("div");
       grid.className = "unitGrid";
       grid.style.setProperty("--cols", String(cols));
+      grid.dataset.owner = node.id;
 
-      // fila 1: persona y esposas
-      const slotPerson = document.createElement("div");
-      slotPerson.className = "slot";
-      slotPerson.style.gridColumn = "1";
-      slotPerson.style.gridRow = "1";
-      slotPerson.appendChild(renderNodeCircle(node, cls));
-      grid.appendChild(slotPerson);
+      // SVG hilos (se dibuja luego con JS)
+      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+      svg.setAttribute("class", "unionSvg");
+      svg.setAttribute("aria-hidden", "true");
+      grid.appendChild(svg);
 
-      spouses.forEach((sp, i) => {
+      // Helper para colocar slot
+      const placeSlot = (col, row, childEl, extraClass="") => {
         const slot = document.createElement("div");
-        slot.className = "slot";
-        slot.style.gridColumn = String(i + 2);
-        slot.style.gridRow = "1";
-        slot.appendChild(renderNodeCircle(sp, `${cls} spouseNode`));
+        slot.className = "slot " + extraClass;
+        slot.style.gridColumn = String(col);
+        slot.style.gridRow = String(row);
+        slot.appendChild(childEl);
         grid.appendChild(slot);
+        return slot;
+      };
+
+      // fila 1: izquierda, persona, derecha
+      let col = 1;
+
+      // esposas izquierda
+      left.forEach(({ sp, idx }) => {
+        const c = unionColorByIndex(idx);
+        const spEl = renderNodeCircle(sp, `${cls} spouseNode`, { uColor: c, spouseIdx: idx });
+        placeSlot(col++, 1, spEl, "slotSpouse");
       });
 
-      // fila 2: hijos debajo de cada esposa (y debajo del titular si hay hijos sin esposa)
+      // persona centro
+      const ownerEl = renderNodeCircle(node, cls, { isOwner:true });
+      const ownerCol = col;
+      placeSlot(col++, 1, ownerEl, "slotOwner");
+
+      // esposas derecha
+      right.forEach(({ sp, idx }) => {
+        const c = unionColorByIndex(idx);
+        const spEl = renderNodeCircle(sp, `${cls} spouseNode`, { uColor: c, spouseIdx: idx });
+        placeSlot(col++, 1, spEl, "slotSpouse");
+      });
+
+      // fila 2: hijos debajo de la persona (si existen)
       if (depth < MAX_DEPTH){
-        // hijos sin esposa asociada
         if (Array.isArray(node.children) && node.children.length){
           const u = document.createElement("div");
           u.className = "slot unionSlot";
-          u.style.gridColumn = "1";
+          u.style.gridColumn = String(ownerCol);
           u.style.gridRow = "2";
+          u.style.setProperty("--uColor", "var(--treeLine)");
 
           const cap = document.createElement("div");
           cap.className = "unionCaption";
@@ -1737,54 +1792,76 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
 
           const group = document.createElement("div");
           group.className = "childrenGroup";
+          group.style.setProperty("--uColor", "var(--treeLine)");
+
           const row = document.createElement("div");
           row.className = "childrenRow";
-          row.style.setProperty("--cols", String(colsForKids(node.children.length)));
+          row.style.setProperty("--kidCols", String(kidCols(node.children.length)));
 
           node.children.forEach(ch => {
             const cw = document.createElement("div");
             cw.className = "childWrap";
+            cw.style.setProperty("--uColor", "var(--treeLine)");
             cw.appendChild(renderSubtree(ch, depth + 1));
             row.appendChild(cw);
           });
+
           group.appendChild(row);
           u.appendChild(group);
-
           grid.appendChild(u);
         }
 
-        // hijos por esposa
-        spouses.forEach((sp, i) => {
-          if (!Array.isArray(sp.children) || !sp.children.length) return;
+        // fila 2: hijos debajo de cada esposa (mismo color unión)
+        // OJO: necesitamos colocar según posiciones (left/person/right)
+        // Recorremos slots fila 1 y si es esposa, ponemos sus hijos justo debajo de ese col.
+        const spouseNodes = Array.from(grid.querySelectorAll('.slotSpouse > .node[data-spouse-idx]'));
+        spouseNodes.forEach(spNode => {
+          const idx = Number(spNode.dataset.spouseIdx);
+          const c = unionColorByIndex(idx);
+          const spId = spNode.dataset.id;
+
+          const hit = findNodeById(spId);
+          if (!hit || !hit.isSpouse || !hit.parent) return;
+          const owner = hit.parent;
+          const sp = owner.spouses?.[hit.spouseIndex];
+          if (!sp || !Array.isArray(sp.children) || !sp.children.length) return;
+
+          // col de esa esposa
+          const slot = spNode.closest(".slotSpouse");
+          const colStr = slot?.style?.gridColumn;
+          if (!colStr) return;
 
           const u = document.createElement("div");
           u.className = "slot unionSlot spouseUnion";
-          u.style.gridColumn = String(i + 2);
+          u.style.gridColumn = colStr;
           u.style.gridRow = "2";
+          u.style.setProperty("--uColor", c);
 
           const nm = (sp.name && sp.name.trim()) ? sp.name.trim() : "Esposa/Pareja";
           const cap = document.createElement("div");
           cap.className = "unionCaption";
           cap.textContent = `Hijos con ${nm}`;
+          cap.style.color = c;
           u.appendChild(cap);
 
           const group = document.createElement("div");
           group.className = "childrenGroup";
+          group.style.setProperty("--uColor", c);
 
           const row = document.createElement("div");
           row.className = "childrenRow";
-          row.style.setProperty("--cols", String(colsForKids(sp.children.length)));
+          row.style.setProperty("--kidCols", String(kidCols(sp.children.length)));
 
           sp.children.forEach(ch => {
             const cw = document.createElement("div");
             cw.className = "childWrap";
+            cw.style.setProperty("--uColor", c);
             cw.appendChild(renderSubtree(ch, depth + 1));
             row.appendChild(cw);
           });
 
           group.appendChild(row);
           u.appendChild(group);
-
           grid.appendChild(u);
         });
       }
@@ -1794,6 +1871,90 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
     }
     /* =========================================================
        FIN BLOQUE: RENDER ÁRBOL
+       ========================================================= */
+
+
+    /* =========================================================
+       INICIO BLOQUE: DIBUJO DE HILOS (SVG)
+       ========================================================= */
+    function drawUnionLines(){
+      const grids = document.querySelectorAll(".unitGrid[data-owner]");
+      grids.forEach(grid => {
+        const svg = grid.querySelector("svg.unionSvg");
+        if (!svg) return;
+
+        // limpiar
+        while (svg.firstChild) svg.removeChild(svg.firstChild);
+
+        const owner = grid.querySelector('.node[data-is-owner="1"]');
+        if (!owner) return;
+
+        const spouseNodes = Array.from(grid.querySelectorAll('.slotSpouse > .node[data-spouse-idx]'));
+        if (!spouseNodes.length) {
+          svg.style.height = "0px";
+          return;
+        }
+
+        const gRect = grid.getBoundingClientRect();
+        const oRect = owner.getBoundingClientRect();
+
+        const ox = (oRect.left - gRect.left) + oRect.width/2;
+        const oy = (oRect.top  - gRect.top ) + oRect.height/2;
+
+        // altura svg: hasta el “bottom” del row 1
+        let maxBottom = oRect.bottom;
+        spouseNodes.forEach(s => {
+          const r = s.getBoundingClientRect();
+          maxBottom = Math.max(maxBottom, r.bottom);
+        });
+        const h = Math.max(1, (maxBottom - gRect.top) + 8);
+        const w = Math.max(1, gRect.width);
+
+        svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
+        svg.style.height = `${h}px`;
+
+        spouseNodes.forEach(sNode => {
+          const idx = Number(sNode.dataset.spouseIdx || "0");
+          const color = unionColorByIndex(idx);
+
+          const sRect = sNode.getBoundingClientRect();
+          const sx = (sRect.left - gRect.left) + sRect.width/2;
+          const sy = (sRect.top  - gRect.top ) + sRect.height/2;
+
+          // curva suave
+          const mx = (ox + sx) / 2;
+          const my = Math.min(oy, sy) - 26;
+
+          const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
+          path.setAttribute("d", `M ${ox} ${oy} Q ${mx} ${my} ${sx} ${sy}`);
+          path.setAttribute("fill", "none");
+          path.setAttribute("stroke", color);
+          path.setAttribute("stroke-width", "3");
+          path.setAttribute("stroke-linecap", "round");
+          path.setAttribute("opacity", "0.9");
+          svg.appendChild(path);
+
+          // puntitos en extremos
+          const c1 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+          c1.setAttribute("cx", String(ox));
+          c1.setAttribute("cy", String(oy));
+          c1.setAttribute("r", "3.5");
+          c1.setAttribute("fill", color);
+          c1.setAttribute("opacity", "0.9");
+          svg.appendChild(c1);
+
+          const c2 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+          c2.setAttribute("cx", String(sx));
+          c2.setAttribute("cy", String(sy));
+          c2.setAttribute("r", "3.5");
+          c2.setAttribute("fill", color);
+          c2.setAttribute("opacity", "0.9");
+          svg.appendChild(c2);
+        });
+      });
+    }
+    /* =========================================================
+       FIN BLOQUE: DIBUJO DE HILOS (SVG)
        ========================================================= */
 
 
@@ -1876,12 +2037,9 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       if (!bdayListEl) return;
 
       const m = bdayView.m;
-      const all = collectBirthdays()
-        .filter(p => p.m === m)
-        .sort((a,b) => a.d - b.d);
+      const all = collectBirthdays().filter(p => p.m === m).sort((a,b) => a.d - b.d);
 
       bdayListEl.innerHTML = "";
-
       if (!all.length){
         bdayListEl.innerHTML = `<div style="color:var(--muted); font-size:12px; padding:8px 6px;">
           No hay cumpleaños registrados para <b>${monthNameEs(m)}</b>.
@@ -1985,17 +2143,20 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
     function renderAll(){
       renderCover();
 
-      // Padres (como dos nodos, no “grid de esposas”)
+      // Padres
       if (parentsGen){
         parentsGen.innerHTML = "";
         const cw = document.createElement("div");
         cw.className = "coupleWrap";
         parentsGen.appendChild(cw);
 
-        cw.appendChild(renderNodeCircle(state.parents[0], "lvl-parent"));
-        cw.appendChild(renderNodeCircle(state.parents[1], "lvl-parent"));
+        const p1 = renderNodeCircle(state.parents[0], "lvl-parent", { isOwner:false });
+        const p2 = renderNodeCircle(state.parents[1], "lvl-parent", { isOwner:false });
+        cw.appendChild(p1);
+        cw.appendChild(p2);
       }
 
+      // Árbol
       if (childrenGen){
         childrenGen.innerHTML = "";
         const grid = document.createElement("div");
@@ -2012,8 +2173,13 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
         childrenGen.appendChild(grid);
       }
 
+      // Cumpleaños
       renderBirthdays();
 
+      // Hilos
+      requestAnimationFrame(() => drawUnionLines());
+
+      // Zoom bounds si está visible
       if (isTreeTabActive()){
         requestAnimationFrame(() => refreshZoomBounds(false));
       }
@@ -2040,9 +2206,7 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
           ? `${TREE_ID}/cover_${ts}.jpg`
           : `${TREE_ID}/${pendingPhotoTarget.id}_${ts}.jpg`;
 
-        const { error: upErr } = await supabase.storage
-          .from(BUCKET)
-          .upload(path, jpgBlob, { contentType: "image/jpeg" });
+        const { error: upErr } = await supabase.storage.from(BUCKET).upload(path, jpgBlob, { contentType: "image/jpeg" });
         if (upErr) throw upErr;
 
         const { data: pub } = supabase.storage.from(BUCKET).getPublicUrl(path);
@@ -2110,7 +2274,6 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       if (applyingRemote) return;
 
       const payload = { id: TREE_ID, data: state, updated_at: new Date().toISOString() };
-
       const { error } = await supabase.from("family_trees").upsert(payload, { onConflict: "id" });
 
       if (error) { console.error(error); setConn(false, "Error guardando"); }
@@ -2348,6 +2511,7 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       e.preventDefault();
       const factor = (e.deltaY < 0) ? 1.08 : 0.92;
       applyZoom(zoom * factor, { clientX: e.clientX, clientY: e.clientY });
+      requestAnimationFrame(() => drawUnionLines());
     }, { passive:false });
 
     let isPanning = false;
@@ -2387,7 +2551,10 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       try { zoomViewport.releasePointerCapture(e.pointerId); } catch {}
     });
 
-    window.addEventListener("resize", () => refreshZoomBounds(false));
+    window.addEventListener("resize", () => {
+      refreshZoomBounds(false);
+      requestAnimationFrame(() => drawUnionLines());
+    });
     /* =========================================================
        FIN BLOQUE: ZOOM + PAN
        ========================================================= */
@@ -2454,3 +2621,4 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
   </script>
 </body>
 </html>
+
