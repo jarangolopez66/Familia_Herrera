@@ -31,7 +31,7 @@
       --treeLine: rgba(0,0,0,.10);
 
       --colW: 180px;
-      --colGap: 18px;
+      --colGap: 14px;
 
       --coverH: 300px;
     }
@@ -389,7 +389,6 @@
       min-width: var(--colW);
       display:flex;
       justify-content:center;
-      align-items:flex-start;
     }
 
     .subtree{
@@ -397,7 +396,7 @@
       display:flex;
       flex-direction:column;
       align-items:center;
-      gap: 14px;
+      gap: 10px;
       padding: 6px 4px 2px;
       width: max-content;
     }
@@ -410,7 +409,7 @@
       gap: 6px;
       cursor:pointer;
       user-select:none;
-      max-width: 200px;
+      max-width: 180px;
     }
 
     .circle{
@@ -426,12 +425,14 @@
       font-size: 12px;
       font-weight: 900;
       text-align:center;
-      max-width: 180px;
+      max-width: 170px;
+
       white-space: normal;
       overflow: hidden;
       display: -webkit-box;
       -webkit-box-orient: vertical;
       -webkit-line-clamp: 2;
+
       line-height: 1.15;
     }
     .labelYears{
@@ -476,46 +477,26 @@
     }
 
     /* =========================================================
-       INICIO BLOQUE: PERSONA CENTRADA + ESPOSAS LADOS + HILOS COLOR
+       INICIO BLOQUE: UNIT GRID (persona + esposas) + hijos debajo
        ========================================================= */
     .unitGrid{
-      position: relative;
       display:grid;
       grid-template-columns: repeat(var(--cols, 1), max-content);
-      column-gap: 26px;           /* ✅ más separación horizontal */
-      row-gap: 18px;              /* ✅ más separación vertical */
+      column-gap: 12px;
+      row-gap: 8px;
       justify-content:center;
-      align-items:start;          /* ✅ evita “bajar/subir” raro */
+      align-items:start;
       width: max-content;
-      padding: 6px 4px;
     }
     .unitGrid .slot{
       display:flex;
       flex-direction:column;
       align-items:center;
       justify-content:flex-start;
-      width: max-content;
-      align-self:start;
-      justify-self:center;
-      min-width: 0;
     }
 
-    /* SVG de hilos */
-    .unionSvg{
-      position:absolute;
-      inset: 0;
-      width: 100%;
-      height: 160px; /* se reajusta por JS */
-      pointer-events:none;
-      overflow: visible;
-      z-index: 1;
-    }
-    .slot > .node{ position:relative; z-index: 2; }
-
-    /* esposas con marco punteado y borde del color de unión */
+    /* esposas con marco punteado */
     .spouseNode{ opacity:.98; }
-    .spouseNode .circle{ border-color: var(--uColor, rgba(0,0,0,.18)) !important; }
-
     .lvl-parent.spouseNode .circle{ border-width:3px; border-style:dashed; }
     .lvl-original.spouseNode .circle{ border-width:3px; border-style:dashed; }
     .lvl-1.spouseNode .circle{ border-width:3px; border-style:dashed; }
@@ -524,70 +505,58 @@
 
     .unionCaption{
       font-size:11px;
-      color: var(--uColor, var(--muted));
+      color: var(--muted);
       font-weight:900;
       text-align:center;
-      margin: 2px 0 8px 0;
-      max-width: 260px;
+      margin: 2px 0 6px 0;
+      max-width: 210px;
       white-space: normal;
     }
 
     .unionSlot{
-      --uColor: var(--treeLine);
       width: max-content;
       align-items:center;
-      align-self:start;
-      justify-self:center;
-      padding: 0 6px;
-      min-width: 0;
     }
+    /* conector vertical desde esposa/persona hacia su grupo de hijos */
     .unionSlot::before{
       content:"";
       display:block;
       width:0;
       height:12px;
       margin: 0 auto 6px auto;
-      border-left: 2px solid var(--uColor);
+      border-left: 2px solid var(--treeLine);
       border-radius: 99px;
-      opacity:.95;
+    }
+    .unionSlot.spouseUnion::before{
+      border-left-style: dashed;
+      border-left-color: rgba(0,0,0,.22);
     }
 
-    /* ✅ MARCO (frame) del bloque de hijos */
-    .kidsFrame{
-      border:2px solid var(--uColor);
-      border-radius: 16px;
-      background: rgba(255,255,255,.42);
-      box-shadow: 0 10px 22px rgba(0,0,0,.10);
-      padding: 10px 10px 8px 10px;
-      width: max-content;      /* ✅ evita colapsos raros */
-      max-width: 980px;        /* ✅ por si un subárbol se vuelve gigante */
-    }
-
-    /* Grupo de hijos (línea horizontal del color unión) */
+    /* Grupo de hijos (solo con línea horizontal sobre los niños) */
     .childrenGroup{
       position:relative;
       width: max-content;
-      padding-top: 10px;
+      padding-top: 0px; /* ✅ ya lo conecta .unionSlot */
     }
     .childrenGroup::before{
       content:"";
       position:absolute;
       top: 0px;
-      left: 10px;
-      right: 10px;
+      left: 12px;
+      right: 12px;
       height:2px;
-      background: var(--uColor, var(--treeLine));
+      background: var(--treeLine);
       border-radius: 99px;
-      opacity:.95;
     }
+    .childrenGroup::after{ display:none; } /* ✅ evita doble conector vertical */
 
     .childrenRow{
       display:grid;
-      gap: 14px;                 /* ✅ más separación entre hijos */
+      gap: 10px;
       justify-content:center;
       align-items:start;
       margin-top: 10px;
-      grid-template-columns: repeat(var(--kidCols, 4), max-content);
+      grid-template-columns: repeat(var(--cols, 4), max-content);
       width: max-content;
     }
 
@@ -596,12 +565,9 @@
       display:flex;
       flex-direction:column;
       align-items:center;
-      gap: 10px;
+      gap: 8px;
       padding-top: 10px;
       width: max-content;
-      align-self:start;
-      justify-self:center;
-      min-width: 0;
     }
     .childWrap::before{
       content:"";
@@ -610,13 +576,12 @@
       left: 50%;
       width:2px;
       height:10px;
-      background: var(--uColor, var(--treeLine));
+      background: var(--treeLine);
       transform: translateX(-50%);
       border-radius: 99px;
-      opacity:.95;
     }
     /* =========================================================
-       FIN BLOQUE: PERSONA CENTRADA + ESPOSAS LADOS + HILOS COLOR
+       FIN BLOQUE: UNIT GRID
        ========================================================= */
 
     .flash{
@@ -936,8 +901,6 @@
       .searchInput{ width:100%; }
       .zoomViewport{ height: min(70vh, 780px); }
       .bdayGrid{ grid-template-columns: 1fr; }
-      .unionSvg{ height: 140px; }
-      .unitGrid{ column-gap: 18px; row-gap: 16px; }
     }
     @media (max-width: 560px){
       :root{ --colW: 160px; --coverH: 250px; }
@@ -947,8 +910,6 @@
       .lvl-2 .circle{ width:54px; height:54px; }
       .lvl-3 .circle{ width:46px; height:46px; }
       .zoomViewport{ height: min(72vh, 760px); }
-      .unionSvg{ height: 130px; }
-      .unitGrid{ column-gap: 16px; row-gap: 14px; }
     }
     /* =========================================================
        FIN BLOQUE: RESPONSIVE
@@ -1084,17 +1045,6 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
     };
 
     const LOCKS_ENABLED = false;
-
-    const UNION_COLORS = [
-      "#4F86AA",
-      "#B36D4C",
-      "#2F8F6B",
-      "#7A5EA7",
-      "#C6A24A",
-      "#B6463F",
-      "#3C7D7C",
-      "#6B5F4A"
-    ];
 
     const connDot  = document.getElementById("connDot");
     const connText = document.getElementById("connText");
@@ -1285,10 +1235,6 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       if (crypto?.randomUUID) return `${prefix}_${crypto.randomUUID()}`;
       return `${prefix}_${Date.now()}_${Math.random().toString(16).slice(2)}`;
     }
-
-    function unionColorByIndex(idx){
-      return UNION_COLORS[idx % UNION_COLORS.length];
-    }
     /* =========================================================
        FIN BLOQUE: HELPERS
        ========================================================= */
@@ -1306,8 +1252,8 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
         death:"",
         photo_url: placeholderImg,
         photo_path:"",
-        spouses: [],
-        children:[]
+        spouses: [],           // [{... , children:[]}]
+        children:[]            // hijos sin esposa asociada (opcional)
       };
     }
     function makeSpouse(){
@@ -1331,7 +1277,7 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
         { ...makePerson({ id:"p1", role:"Padre" }) },
         { ...makePerson({ id:"p2", role:"Madre" }) },
       ],
-      children: []
+      children: [] // ✅ familia nueva: empieza vacío
     };
 
     let state = structuredClone(defaultState);
@@ -1356,6 +1302,7 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       if (node.photo_url === "") node.photo_url = placeholderImg;
       if (!("photo_path" in node)) node.photo_path = "";
 
+      // Migración suave: si existía "spouse" antiguo
       if ("spouse" in node && node.spouse) {
         const one = normalizeSpouseObj(node.spouse);
         node.spouses = Array.isArray(node.spouses) ? node.spouses : [];
@@ -1393,6 +1340,7 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
     function findInChildren(parentNode, id, depth){
       if (!parentNode) return null;
 
+      // Esposas
       if (Array.isArray(parentNode.spouses)) {
         for (let i=0; i<parentNode.spouses.length; i++){
           const sp = parentNode.spouses[i];
@@ -1401,6 +1349,7 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
             return { node: sp, parent: parentNode, parentChildrenArray: null, depth, isSpouse:true, spouseIndex: i };
           }
 
+          // Hijos de esa esposa
           if (Array.isArray(sp?.children) && sp.children.length){
             for (const ch of sp.children){
               if (ch.id === id) {
@@ -1413,6 +1362,7 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
         }
       }
 
+      // Hijos sin esposa asociada
       if (Array.isArray(parentNode.children) && parentNode.children.length){
         for (const child of parentNode.children) {
           if (child.id === id) {
@@ -1451,6 +1401,7 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       const hit = findNodeById(parentId);
       if (!hit?.node) return;
 
+      // si estás parado en esposa, agrega a esa unión
       if (hit.isSpouse) return addChildToSpouse(hit.node.id);
 
       const parent = hit.node;
@@ -1591,16 +1542,14 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
         spousesHtml = `
           <div class="spouseList">
             <div style="font-size:12px; font-weight:900; color:var(--muted);">Esposas/Parejas</div>
-            ${node.spouses.map((s, idx) => {
+            ${node.spouses.map(s => {
               const nm = (s.name && s.name.trim()) ? s.name.trim() : "Sin nombre";
-              const c = unionColorByIndex(idx);
               return `
                 <div class="spouseItem">
                   <b>${escapeHtml(nm)}</b>
                   <div class="spouseBtns">
                     <button class="smallbtn spouse" data-action="openSpouse:${escapeAttr(s.id)}" type="button">Editar</button>
                     <button class="smallbtn addkid" data-action="addChildSpouse:${escapeAttr(s.id)}" type="button">+ Hijo</button>
-                    <span style="font-weight:900; font-size:11px; color:${c}; padding:2px 6px; border-radius:999px; border:1px solid rgba(0,0,0,.10); background:rgba(255,255,255,.55);">●</span>
                   </div>
                 </div>
               `;
@@ -1687,16 +1636,12 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
 
 
     /* =========================================================
-       INICIO BLOQUE: RENDER ÁRBOL
+       INICIO BLOQUE: RENDER ÁRBOL (hijos debajo de cada esposa)
        ========================================================= */
-    function renderNodeCircle(node, cls, { uColor=null, isOwner=false, spouseIdx=null } = {}){
+    function renderNodeCircle(node, cls){
       const el = document.createElement("div");
       el.className = `node ${cls}`;
       el.dataset.id = node.id;
-
-      if (uColor) el.style.setProperty("--uColor", uColor);
-      if (isOwner) el.dataset.isOwner = "1";
-      if (spouseIdx !== null) el.dataset.spouseIdx = String(spouseIdx);
 
       const name = (node.name && node.name.trim()) ? node.name.trim() : "Sin nombre";
       const yrs  = yearRange(node.birth, node.death);
@@ -1722,15 +1667,28 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       if (depth === 2) return "lvl-2";
       return "lvl-3";
     }
-    function kidCols(n){ return Math.max(1, Math.min(4, n)); }
+    function colsForKids(n){
+      if (n <= 0) return 0;
+      return Math.min(4, n);
+    }
 
-    function splitSpousesAroundCenter(spouses){
-      const left = [];
-      const right = [];
-      spouses.forEach((sp, idx) => {
-        if (idx % 2 === 0) right.push({ sp, idx }); else left.push({ sp, idx });
+    function renderChildrenGroup(children){
+      const group = document.createElement("div");
+      group.className = "childrenGroup";
+
+      const row = document.createElement("div");
+      row.className = "childrenRow";
+      row.style.setProperty("--cols", String(colsForKids(children.length)));
+
+      children.forEach(ch => {
+        const cw = document.createElement("div");
+        cw.className = "childWrap";
+        cw.appendChild(renderSubtree(ch, 0)); // profundidad se maneja arriba
+        row.appendChild(cw);
       });
-      return { left: left.reverse(), right };
+
+      group.appendChild(row);
+      return group;
     }
 
     function renderSubtree(node, depth = 0){
@@ -1740,55 +1698,37 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       const cls = depthClass(depth);
 
       const spouses = Array.isArray(node.spouses) ? node.spouses : [];
-      const { left, right } = splitSpousesAroundCenter(spouses);
-
-      const cols = left.length + 1 + right.length;
+      const cols = 1 + spouses.length;
 
       const grid = document.createElement("div");
       grid.className = "unitGrid";
       grid.style.setProperty("--cols", String(cols));
-      grid.dataset.owner = node.id;
 
-      const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-      svg.setAttribute("class", "unionSvg");
-      svg.setAttribute("aria-hidden", "true");
-      grid.appendChild(svg);
+      // fila 1: persona y esposas
+      const slotPerson = document.createElement("div");
+      slotPerson.className = "slot";
+      slotPerson.style.gridColumn = "1";
+      slotPerson.style.gridRow = "1";
+      slotPerson.appendChild(renderNodeCircle(node, cls));
+      grid.appendChild(slotPerson);
 
-      const placeSlot = (col, row, childEl, extraClass="") => {
+      spouses.forEach((sp, i) => {
         const slot = document.createElement("div");
-        slot.className = "slot " + extraClass;
-        slot.style.gridColumn = String(col);
-        slot.style.gridRow = String(row);
-        slot.appendChild(childEl);
+        slot.className = "slot";
+        slot.style.gridColumn = String(i + 2);
+        slot.style.gridRow = "1";
+        slot.appendChild(renderNodeCircle(sp, `${cls} spouseNode`));
         grid.appendChild(slot);
-        return slot;
-      };
-
-      let col = 1;
-
-      left.forEach(({ sp, idx }) => {
-        const c = unionColorByIndex(idx);
-        const spEl = renderNodeCircle(sp, `${cls} spouseNode`, { uColor: c, spouseIdx: idx });
-        placeSlot(col++, 1, spEl, "slotSpouse");
       });
 
-      const ownerEl = renderNodeCircle(node, cls, { isOwner:true });
-      const ownerCol = col;
-      placeSlot(col++, 1, ownerEl, "slotOwner");
-
-      right.forEach(({ sp, idx }) => {
-        const c = unionColorByIndex(idx);
-        const spEl = renderNodeCircle(sp, `${cls} spouseNode`, { uColor: c, spouseIdx: idx });
-        placeSlot(col++, 1, spEl, "slotSpouse");
-      });
-
+      // fila 2: hijos debajo de cada esposa (y debajo del titular si hay hijos sin esposa)
       if (depth < MAX_DEPTH){
+        // hijos sin esposa asociada
         if (Array.isArray(node.children) && node.children.length){
           const u = document.createElement("div");
           u.className = "slot unionSlot";
-          u.style.gridColumn = String(ownerCol);
+          u.style.gridColumn = "1";
           u.style.gridRow = "2";
-          u.style.setProperty("--uColor", "var(--treeLine)");
 
           const cap = document.createElement("div");
           cap.className = "unionCaption";
@@ -1797,86 +1737,54 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
 
           const group = document.createElement("div");
           group.className = "childrenGroup";
-          group.style.setProperty("--uColor", "var(--treeLine)");
-
           const row = document.createElement("div");
           row.className = "childrenRow";
-          row.style.setProperty("--kidCols", String(kidCols(node.children.length)));
+          row.style.setProperty("--cols", String(colsForKids(node.children.length)));
 
           node.children.forEach(ch => {
             const cw = document.createElement("div");
             cw.className = "childWrap";
-            cw.style.setProperty("--uColor", "var(--treeLine)");
             cw.appendChild(renderSubtree(ch, depth + 1));
             row.appendChild(cw);
           });
-
           group.appendChild(row);
+          u.appendChild(group);
 
-          // ✅ marco de color
-          const frame = document.createElement("div");
-          frame.className = "kidsFrame";
-          frame.style.setProperty("--uColor", "var(--treeLine)");
-          frame.appendChild(group);
-
-          u.appendChild(frame);
           grid.appendChild(u);
         }
 
-        const spouseNodes = Array.from(grid.querySelectorAll('.slotSpouse > .node[data-spouse-idx]'));
-        spouseNodes.forEach(spNode => {
-          const idx = Number(spNode.dataset.spouseIdx || "0");
-          const c = unionColorByIndex(idx);
-          const spId = spNode.dataset.id;
-
-          const hit = findNodeById(spId);
-          if (!hit || !hit.isSpouse || !hit.parent) return;
-          const owner = hit.parent;
-          const sp = owner.spouses?.[hit.spouseIndex];
-          if (!sp || !Array.isArray(sp.children) || !sp.children.length) return;
-
-          const slot = spNode.closest(".slotSpouse");
-          const colStr = slot?.style?.gridColumn;
-          if (!colStr) return;
+        // hijos por esposa
+        spouses.forEach((sp, i) => {
+          if (!Array.isArray(sp.children) || !sp.children.length) return;
 
           const u = document.createElement("div");
-          u.className = "slot unionSlot";
-          u.style.gridColumn = colStr;
+          u.className = "slot unionSlot spouseUnion";
+          u.style.gridColumn = String(i + 2);
           u.style.gridRow = "2";
-          u.style.setProperty("--uColor", c);
 
           const nm = (sp.name && sp.name.trim()) ? sp.name.trim() : "Esposa/Pareja";
           const cap = document.createElement("div");
           cap.className = "unionCaption";
           cap.textContent = `Hijos con ${nm}`;
-          cap.style.color = c;
           u.appendChild(cap);
 
           const group = document.createElement("div");
           group.className = "childrenGroup";
-          group.style.setProperty("--uColor", c);
 
           const row = document.createElement("div");
           row.className = "childrenRow";
-          row.style.setProperty("--kidCols", String(kidCols(sp.children.length)));
+          row.style.setProperty("--cols", String(colsForKids(sp.children.length)));
 
           sp.children.forEach(ch => {
             const cw = document.createElement("div");
             cw.className = "childWrap";
-            cw.style.setProperty("--uColor", c);
             cw.appendChild(renderSubtree(ch, depth + 1));
             row.appendChild(cw);
           });
 
           group.appendChild(row);
+          u.appendChild(group);
 
-          // ✅ marco de color
-          const frame = document.createElement("div");
-          frame.className = "kidsFrame";
-          frame.style.setProperty("--uColor", c);
-          frame.appendChild(group);
-
-          u.appendChild(frame);
           grid.appendChild(u);
         });
       }
@@ -1890,87 +1798,14 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
 
 
     /* =========================================================
-       INICIO BLOQUE: HILOS SVG
-       ========================================================= */
-    function drawUnionLines(){
-      const grids = document.querySelectorAll(".unitGrid[data-owner]");
-      grids.forEach(grid => {
-        const svg = grid.querySelector("svg.unionSvg");
-        if (!svg) return;
-
-        while (svg.firstChild) svg.removeChild(svg.firstChild);
-
-        const owner = grid.querySelector('.node[data-is-owner="1"]');
-        if (!owner) return;
-
-        const spouseNodes = Array.from(grid.querySelectorAll('.slotSpouse > .node[data-spouse-idx]'));
-        if (!spouseNodes.length) { svg.style.height = "0px"; return; }
-
-        const gRect = grid.getBoundingClientRect();
-        const oRect = owner.getBoundingClientRect();
-
-        const ox = (oRect.left - gRect.left) + oRect.width/2;
-        const oy = (oRect.top  - gRect.top ) + oRect.height/2;
-
-        let maxBottom = oRect.bottom;
-        spouseNodes.forEach(s => { maxBottom = Math.max(maxBottom, s.getBoundingClientRect().bottom); });
-
-        const h = Math.max(1, (maxBottom - gRect.top) + 14);
-        const w = Math.max(1, gRect.width);
-
-        svg.setAttribute("viewBox", `0 0 ${w} ${h}`);
-        svg.style.height = `${h}px`;
-
-        spouseNodes.forEach(sNode => {
-          const idx = Number(sNode.dataset.spouseIdx || "0");
-          const color = unionColorByIndex(idx);
-
-          const sRect = sNode.getBoundingClientRect();
-          const sx = (sRect.left - gRect.left) + sRect.width/2;
-          const sy = (sRect.top  - gRect.top ) + sRect.height/2;
-
-          const mx = (ox + sx) / 2;
-          const my = Math.min(oy, sy) - 28;
-
-          const path = document.createElementNS("http://www.w3.org/2000/svg", "path");
-          path.setAttribute("d", `M ${ox} ${oy} Q ${mx} ${my} ${sx} ${sy}`);
-          path.setAttribute("fill", "none");
-          path.setAttribute("stroke", color);
-          path.setAttribute("stroke-width", "3");
-          path.setAttribute("stroke-linecap", "round");
-          path.setAttribute("opacity", "0.9");
-          svg.appendChild(path);
-
-          const c1 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-          c1.setAttribute("cx", String(ox));
-          c1.setAttribute("cy", String(oy));
-          c1.setAttribute("r", "3.5");
-          c1.setAttribute("fill", color);
-          c1.setAttribute("opacity", "0.9");
-          svg.appendChild(c1);
-
-          const c2 = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-          c2.setAttribute("cx", String(sx));
-          c2.setAttribute("cy", String(sy));
-          c2.setAttribute("r", "3.5");
-          c2.setAttribute("fill", color);
-          c2.setAttribute("opacity", "0.9");
-          svg.appendChild(c2);
-        });
-      });
-    }
-    /* =========================================================
-       FIN BLOQUE: HILOS SVG
-       ========================================================= */
-
-
-    /* =========================================================
-       INICIO BLOQUE: PORTADA
+       INICIO BLOQUE: RENDER PORTADA
        ========================================================= */
     function renderCover(){
       if (coverImg) coverImg.src = state.cover_photo_url || placeholderCover;
+
       if (!first11Strip) return;
       first11Strip.innerHTML = "";
+
       const first11 = (state.children || []).slice(0, 11);
       first11.forEach((p, idx) => {
         const chip = document.createElement("div");
@@ -1987,12 +1822,12 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       });
     }
     /* =========================================================
-       FIN BLOQUE: PORTADA
+       FIN BLOQUE: RENDER PORTADA
        ========================================================= */
 
 
     /* =========================================================
-       INICIO BLOQUE: CUMPLEAÑOS (SIN AÑOS)
+       INICIO BLOQUE: CUMPLEAÑOS (SIN AÑOS, FILTRA POR MES)
        ========================================================= */
     function parseYMD(ymd){
       if (!ymd || typeof ymd !== "string") return null;
@@ -2041,9 +1876,12 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       if (!bdayListEl) return;
 
       const m = bdayView.m;
-      const all = collectBirthdays().filter(p => p.m === m).sort((a,b) => a.d - b.d);
+      const all = collectBirthdays()
+        .filter(p => p.m === m)
+        .sort((a,b) => a.d - b.d);
 
       bdayListEl.innerHTML = "";
+
       if (!all.length){
         bdayListEl.innerHTML = `<div style="color:var(--muted); font-size:12px; padding:8px 6px;">
           No hay cumpleaños registrados para <b>${monthNameEs(m)}</b>.
@@ -2147,6 +1985,7 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
     function renderAll(){
       renderCover();
 
+      // Padres (como dos nodos, no “grid de esposas”)
       if (parentsGen){
         parentsGen.innerHTML = "";
         const cw = document.createElement("div");
@@ -2175,10 +2014,9 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
 
       renderBirthdays();
 
-      requestAnimationFrame(() => {
-        drawUnionLines();
-        if (isTreeTabActive()) refreshZoomBounds(false);
-      });
+      if (isTreeTabActive()){
+        requestAnimationFrame(() => refreshZoomBounds(false));
+      }
     }
     /* =========================================================
        FIN BLOQUE: RENDER GENERAL
@@ -2202,7 +2040,9 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
           ? `${TREE_ID}/cover_${ts}.jpg`
           : `${TREE_ID}/${pendingPhotoTarget.id}_${ts}.jpg`;
 
-        const { error: upErr } = await supabase.storage.from(BUCKET).upload(path, jpgBlob, { contentType: "image/jpeg" });
+        const { error: upErr } = await supabase.storage
+          .from(BUCKET)
+          .upload(path, jpgBlob, { contentType: "image/jpeg" });
         if (upErr) throw upErr;
 
         const { data: pub } = supabase.storage.from(BUCKET).getPublicUrl(path);
@@ -2268,10 +2108,62 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
     async function saveRemote(){
       if (!supabase) return;
       if (applyingRemote) return;
+
       const payload = { id: TREE_ID, data: state, updated_at: new Date().toISOString() };
+
       const { error } = await supabase.from("family_trees").upsert(payload, { onConflict: "id" });
+
       if (error) { console.error(error); setConn(false, "Error guardando"); }
       else { setConn(true, "Guardado en vivo"); }
+    }
+
+    async function ensureRow(){
+      const { data, error } = await supabase.from("family_trees").select("data").eq("id", TREE_ID).maybeSingle();
+      if (error) { console.error(error); setConn(false, "No puedo leer (RLS)"); return; }
+
+      if (!data) {
+        const { error: insErr } = await supabase.from("family_trees").insert({ id: TREE_ID, data: defaultState });
+        if (insErr) { console.error(insErr); setConn(false, "No puedo crear (RLS)"); return; }
+        state = structuredClone(defaultState);
+      } else {
+        state = normalizeState(data.data || structuredClone(defaultState));
+      }
+
+      renderAll();
+      setConn(true, "Conectado");
+    }
+
+    function subscribeRealtime(){
+      if (channel) { try { supabase.removeChannel(channel); } catch {} }
+
+      channel = supabase
+        .channel(`tree:${TREE_ID}`)
+        .on("postgres_changes",
+          { event:"*", schema:"public", table:"family_trees", filter:`id=eq.${TREE_ID}` },
+          (payload) => {
+            const newData = payload?.new?.data;
+            if (!newData) return;
+            if (isEditing) { queuedRemote = newData; return; }
+
+            applyingRemote = true;
+            state = normalizeState(newData);
+            renderAll();
+            applyingRemote = false;
+
+            setConn(true, "Actualizado en vivo");
+          }
+        )
+        .subscribe();
+    }
+
+    async function boot(){
+      TREE_ID = DEFAULT_CFG.treeId;
+      BUCKET  = DEFAULT_CFG.bucket;
+      supabase = createClient(DEFAULT_CFG.url, DEFAULT_CFG.key);
+
+      setConn(true, "Conectando…");
+      await ensureRow();
+      subscribeRealtime();
     }
     /* =========================================================
        FIN BLOQUE: GUARDADO + SUPABASE
@@ -2285,12 +2177,15 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       const out = [];
       const walk = (node) => {
         out.push({ id: node.id, name: (node.name || "").trim(), photo_url: node.photo_url || placeholderImg });
+
         (node.spouses || []).forEach(s => {
           out.push({ id: s.id, name: (s.name || "").trim(), photo_url: s.photo_url || placeholderImg });
           (s.children || []).forEach(walk);
         });
+
         (node.children || []).forEach(walk);
       };
+
       state.parents.forEach(walk);
       (state.children || []).forEach(walk);
       return out;
@@ -2323,6 +2218,7 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
 
     function goToPerson(id, { open=false } = {}){
       if (!isTreeTabActive()) setActiveTab("tree");
+
       requestAnimationFrame(() => {
         const el = document.querySelector(`[data-id="${CSS.escape(id)}"]`);
         if (el) {
@@ -2339,6 +2235,7 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       if (!q) { searchResults.classList.remove("show"); return; }
       const all = collectPeople();
       const matches = all.filter(p => (p.name || "").toLowerCase().includes(q)).slice(0, 10);
+
       if (openFirst && matches[0]) {
         searchResults.classList.remove("show");
         goToPerson(matches[0].id, { open:true });
@@ -2404,7 +2301,6 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       zoomViewport.scrollTop  = py * zoom - (cy - vpRect.top);
 
       updateZoomLabel();
-      requestAnimationFrame(() => drawUnionLines());
     }
 
     function fitAll(){
@@ -2421,7 +2317,6 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       zoomViewport.scrollTop  = Math.max(0, (baseH*zoom - zoomViewport.clientHeight) / 2);
 
       updateZoomLabel();
-      requestAnimationFrame(() => drawUnionLines());
     }
 
     function refreshZoomBounds(initial=false){
@@ -2436,7 +2331,6 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
         zoomSpacer.style.width  = (baseW * zoom) + "px";
         zoomSpacer.style.height = (baseH * zoom) + "px";
         updateZoomLabel();
-        requestAnimationFrame(() => drawUnionLines());
       }
     }
 
@@ -2491,13 +2385,9 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       isPanning = false;
       zoomViewport.classList.remove("dragging");
       try { zoomViewport.releasePointerCapture(e.pointerId); } catch {}
-      requestAnimationFrame(() => drawUnionLines());
     });
 
-    window.addEventListener("resize", () => {
-      refreshZoomBounds(false);
-      requestAnimationFrame(() => drawUnionLines());
-    });
+    window.addEventListener("resize", () => refreshZoomBounds(false));
     /* =========================================================
        FIN BLOQUE: ZOOM + PAN
        ========================================================= */
@@ -2515,6 +2405,7 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
 
       if (isTreeTabActive()) refreshZoomBounds(true);
 
+      // Supabase
       supabase = createClient(DEFAULT_CFG.url, DEFAULT_CFG.key);
       TREE_ID = DEFAULT_CFG.treeId;
       BUCKET  = DEFAULT_CFG.bucket;
@@ -2535,6 +2426,7 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       renderAll();
       setConn(true, "Conectado");
 
+      // Realtime
       channel = supabase
         .channel(`tree:${TREE_ID}`)
         .on("postgres_changes",
