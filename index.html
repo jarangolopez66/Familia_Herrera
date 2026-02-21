@@ -1,4 +1,4 @@
-<!doctype html> 
+<!doctype html>
 <html lang="es">
 <head>
   <meta charset="utf-8" />
@@ -30,12 +30,10 @@
 
       --treeLine: rgba(0,0,0,.10);
 
-      /* layout */
       --colW: 180px;
       --colGap: 14px;
 
-      /* portada */
-      --coverH: 300px; /* ✅ Tamaño del espacio de la foto de portada */
+      --coverH: 300px;
     }
 
     *{box-sizing:border-box}
@@ -134,13 +132,7 @@
     .dot.ok{background: var(--ok); box-shadow: 0 0 0 4px rgba(47,143,107,.12);}
     .dot.bad{background: var(--danger); box-shadow: 0 0 0 4px rgba(182,70,63,.12);}
 
-    /* Zoom controls */
-    .zoomWrap{
-      display:flex;
-      gap:8px;
-      align-items:center;
-      flex-wrap:wrap;
-    }
+    .zoomWrap{display:flex; gap:8px; align-items:center; flex-wrap:wrap;}
     .zoomLabel{
       font-weight:900;
       color: var(--text);
@@ -211,7 +203,6 @@
     .srThumb img{ width:100%; height:100%; object-fit:cover; display:block; }
     .srText{ display:flex; flex-direction:column; gap:2px; }
     .srName{ font-weight:900; font-size:12px; }
-    .srMeta{ font-size:11px; color: var(--muted); }
 
     main{padding:18px 16px 34px;}
     .container{max-width:1200px; margin:0 auto;}
@@ -221,7 +212,7 @@
 
 
     /* =========================================================
-       INICIO BLOQUE: TABS (Nuestra Historia / Cumpleaños / Árbol)
+       INICIO BLOQUE: TABS
        ========================================================= */
     .tabsBar{
       display:flex;
@@ -255,7 +246,7 @@
 
 
     /* =========================================================
-       INICIO BLOQUE: PORTADA (Nuestra Historia)
+       INICIO BLOQUE: PORTADA
        ========================================================= */
     .cover{
       background: linear-gradient(180deg, var(--card), var(--card2));
@@ -333,12 +324,11 @@
 
 
     /* =========================================================
-       INICIO BLOQUE: ÁRBOL (layout + nodos)
+       INICIO BLOQUE: ÁRBOL
        ========================================================= */
     .divider{height:1px; background: rgba(0,0,0,.10); margin: 16px 0;}
     .gen{display:flex; justify-content:center; gap:18px; flex-wrap:wrap; position:relative;}
 
-    /* Padres como PAREJA (unidos) */
     .couple{justify-content:center; align-items:stretch;}
     .coupleWrap{
       display:flex;
@@ -362,9 +352,6 @@
       border-radius: 99px;
     }
 
-    /* =========================
-       ZOOM VIEWPORT (árbol completo)
-       ========================= */
     .zoomArea{ margin-top: 6px; }
     .zoomViewport{
       height: min(72vh, 820px);
@@ -386,9 +373,6 @@
       padding: 10px 14px 26px;
     }
 
-    /* =========================
-       LAYOUT (columnas auto-anchas por C)
-       ========================= */
     .treeGrid{
       display:grid;
       grid-auto-flow: column;
@@ -458,7 +442,6 @@
       text-align:center;
     }
 
-    /* Marcos por nivel */
     .lvl-parent .circle{
       width:110px; height:130px;
       border-width: 4px;
@@ -493,24 +476,42 @@
       opacity:.96;
     }
 
-    /* Parejas */
+    /* MULTI-ESPOSAS: se muestran en fila (se envuelven si son muchas) */
     .personUnit{
       display:flex;
       gap:12px;
       align-items:flex-start;
       justify-content:center;
-      flex-wrap:nowrap;
+      flex-wrap:wrap;
     }
-    .spouseNode{ opacity: .98; }
 
-    /* ✅ Marco punteado SOLO para la pareja */
+    .spouseNode{ opacity:.98; position:relative; }
+    .spouseNode::before{
+      content:"";
+      position:absolute;
+      left:-10px;
+      top: 46px;
+      width:10px;
+      border-top: 2px dashed rgba(0,0,0,.18);
+    }
+
+    /* marco punteado para esposas */
     .lvl-parent.spouseNode .circle{ border-width:3px; border-style:dashed; }
     .lvl-original.spouseNode .circle{ border-width:3px; border-style:dashed; }
     .lvl-1.spouseNode .circle{ border-width:3px; border-style:dashed; }
     .lvl-2.spouseNode .circle{ border-width:3px; border-style:dashed; }
     .lvl-3.spouseNode .circle{ border-width:2px; border-style:dashed; }
 
-    /* Conectores */
+    /* Bloques de unión (hijos por esposa) */
+    .unionBlock{ margin-top: 6px; }
+    .unionCaption{
+      font-size:11px;
+      color: var(--muted);
+      font-weight:900;
+      text-align:center;
+      margin: 2px 0 0 0;
+    }
+
     .childrenGroup{
       position:relative;
       width: max-content;
@@ -538,7 +539,6 @@
       border-radius: 99px;
     }
 
-    /* Hijos en filas automáticas. --cols controla “hasta cuántos por fila” */
     .childrenRow{
       display:grid;
       gap: 10px;
@@ -570,7 +570,6 @@
       border-radius: 99px;
     }
 
-    /* flash al buscar */
     .flash{
       outline: 4px solid rgba(198,162,74,.60);
       outline-offset: 4px;
@@ -714,6 +713,27 @@
       font-size:12px;
     }
 
+    .spouseList{
+      margin-top: 10px;
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+      padding-top: 10px;
+      border-top: 1px solid rgba(0,0,0,.10);
+    }
+    .spouseItem{
+      display:flex;
+      justify-content:space-between;
+      align-items:center;
+      gap:10px;
+      padding:8px 10px;
+      border:1px solid rgba(0,0,0,.10);
+      border-radius: 12px;
+      background: rgba(255,255,255,.55);
+    }
+    .spouseItem b{font-size:12px;}
+    .spouseBtns{display:flex; gap:8px; flex-wrap:wrap;}
+
     @media (max-width: 560px){
       .fields{grid-template-columns:1fr;}
       .avatar{width:120px; height:120px; margin:0 auto;}
@@ -726,7 +746,7 @@
 
 
     /* =========================================================
-       INICIO BLOQUE: OCULTAR BOTONES PORTADA (como ya lo querías)
+       INICIO BLOQUE: OCULTAR BOTONES PORTADA
        ========================================================= */
     #coverPickLabel,
     #coverClearBtn{
@@ -943,8 +963,7 @@
               <div>
                 <h2>Raices que abrigan siglos</h2>
                 <p>Hoy escribo estas palabras como quien conserva una lámpara en medio del tiempo,
-para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacido.
-</p>
+para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacido.</p>
               </div>
               <div class="cover-actions">
                 <label class="btn btn-primary" for="filePicker" id="coverPickLabel">Cambiar foto</label>
@@ -1011,9 +1030,7 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       bucket: "family-photos"
     };
 
-    // ✅ HERRERA: modo libre (sin blindajes)
-    // Si lo pones en true, bloquea eliminar personas (solo permite quitar parejas)
-    // y bloquea agregar hijos de 1ª gen desde p1/p2.
+    // ✅ HERRERA: modo libre
     const LOCKS_ENABLED = false;
 
     const connDot  = document.getElementById("connDot");
@@ -1034,12 +1051,10 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
     const editorTitle   = document.getElementById("editorTitle");
     const editorBody    = document.getElementById("editorBody");
 
-    // Buscador
     const searchInput   = document.getElementById("searchInput");
     const searchBtn     = document.getElementById("searchBtn");
     const searchResults = document.getElementById("searchResults");
 
-    // Zoom
     const zoomViewport = document.getElementById("zoomViewport");
     const zoomSpacer   = document.getElementById("zoomSpacer");
     const zoomContent  = document.getElementById("zoomContent");
@@ -1048,7 +1063,6 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
     const zoomFitBtn   = document.getElementById("zoomFit");
     const zoomLabel    = document.getElementById("zoomLabel");
 
-    // Tabs
     const tabBtnTree  = document.getElementById("tabBtnTree");
     const tabBtnStory = document.getElementById("tabBtnStory");
     const tabBtnBday  = document.getElementById("tabBtnBday");
@@ -1056,7 +1070,6 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
     const tabStoryPane = document.getElementById("tabStoryPane");
     const tabBdayPane  = document.getElementById("tabBdayPane");
 
-    // Cumpleaños
     const bdayListEl  = document.getElementById("bdayList");
     const bdayCalEl   = document.getElementById("bdayCal");
     const bdayPrevBtn = document.getElementById("bdayPrev");
@@ -1071,10 +1084,9 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
     let applyingRemote = false;
     let channel = null;
 
-    let pendingPhotoTarget = null; // {type:"cover"} o {type:"person",id}
+    let pendingPhotoTarget = null;
 
-    // ✅ vista de cumpleaños solo por mes (sin año)
-    let bdayView = { m: new Date().getMonth() }; // 0..11
+    let bdayView = { m: new Date().getMonth() };
     /* =========================================================
        FIN BLOQUE: CONFIG + DOM
        ========================================================= */
@@ -1098,12 +1110,8 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
 
       try { localStorage.setItem("fh_tab", tab); } catch {}
 
-      if (isTree) {
-        requestAnimationFrame(() => refreshZoomBounds(false));
-      }
-      if (isBday) {
-        requestAnimationFrame(() => renderBirthdays());
-      }
+      if (isTree) requestAnimationFrame(() => refreshZoomBounds(false));
+      if (isBday) requestAnimationFrame(() => renderBirthdays());
     }
 
     tabBtnTree.addEventListener("click", () => setActiveTab("tree"));
@@ -1186,8 +1194,7 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
             </linearGradient>
           </defs>
           <rect width="100%" height="100%" fill="url(#g)"/>
-          <text x="50%" y="48%" text-anchor="middle" font-size="44" fill="rgba(0,0,0,0.35)" font-family="Arial">Poner Foto familiar</text>
-          <text x="50%" y="56%" text-anchor="middle" font-size="22" fill="rgba(0,0,0,0.28)" font-family="Arial">Los 11 Herrera Originales</text>
+          <text x="50%" y="50%" text-anchor="middle" font-size="44" fill="rgba(0,0,0,0.35)" font-family="Arial">Poner Foto familiar</text>
         </svg>`;
       return "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
     })();
@@ -1215,23 +1222,13 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       if (crypto?.randomUUID) return `${prefix}_${crypto.randomUUID()}`;
       return `${prefix}_${Date.now()}_${Math.random().toString(16).slice(2)}`;
     }
-
-    function isOriginal11(id){
-      if (!LOCKS_ENABLED) return false;
-      return /^c([1-9]|10|11)$/.test(id);
-    }
-
-    function isProtectedPersonId(id){
-      if (id === "p1" || id === "p2") return true;
-      return isOriginal11(id);
-    }
     /* =========================================================
        FIN BLOQUE: HELPERS
        ========================================================= */
 
 
     /* =========================================================
-       INICIO BLOQUE: MODELO DE DATOS (personas / pareja)
+       INICIO BLOQUE: MODELO DE DATOS (HIJOS POR ESPOSA)
        ========================================================= */
     function makePerson({ role="", id=null } = {}){
       return {
@@ -1242,21 +1239,20 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
         death:"",
         photo_url: placeholderImg,
         photo_path:"",
-        spouse: null,
-        children:[]
+        spouses: [],           // [{... , children:[] }]
+        children:[]            // hijos sin esposa asociada (opcional)
       };
     }
     function makeSpouse(){
       return {
         id: makeId("s"),
-        role: "Pareja",
+        role: "Esposa/Pareja",
         name:"",
         birth:"",
         death:"",
         photo_url: placeholderImg,
         photo_path:"",
-        spouse: null,
-        children: []
+        children:[]            // ✅ hijos de ESTA unión
       };
     }
 
@@ -1268,26 +1264,41 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
         { ...makePerson({ id:"p1", role:"Padre" }) },
         { ...makePerson({ id:"p2", role:"Madre" }) },
       ],
-      children: Array.from({ length: 11 }, (_, i) => makePerson({ id:`c${i+1}`, role:`Hijo/a ${i+1}` }))
+      children: [] // ✅ familia nueva: empieza vacío
     };
 
     let state = structuredClone(defaultState);
 
+    function normalizeSpouseObj(s){
+      if (!s) return null;
+      if (!s.id) s.id = makeId("s");
+      if (!s.role) s.role = "Esposa/Pareja";
+      if (!s.photo_url) s.photo_url = placeholderImg;
+      if (s.photo_url === "") s.photo_url = placeholderImg;
+      if (!("photo_path" in s)) s.photo_path = "";
+      if (!Array.isArray(s.children)) s.children = [];
+      s.children.forEach(normalizeNode);
+      return s;
+    }
+
     function normalizeNode(node){
       if (!node) return;
+
       if (!Array.isArray(node.children)) node.children = [];
       if (!node.photo_url) node.photo_url = placeholderImg;
       if (node.photo_url === "") node.photo_url = placeholderImg;
       if (!("photo_path" in node)) node.photo_path = "";
 
-      if (node.spouse) {
-        if (!node.spouse.id) node.spouse.id = makeId("s");
-        if (!node.spouse.role) node.spouse.role = "Pareja";
-        if (!node.spouse.photo_url) node.spouse.photo_url = placeholderImg;
-        if (node.spouse.photo_url === "") node.spouse.photo_url = placeholderImg;
-        if (!("photo_path" in node.spouse)) node.spouse.photo_path = "";
-        if (!Array.isArray(node.spouse.children)) node.spouse.children = [];
+      // Migración suave: si existía "spouse" antiguo
+      if ("spouse" in node && node.spouse) {
+        const one = normalizeSpouseObj(node.spouse);
+        node.spouses = Array.isArray(node.spouses) ? node.spouses : [];
+        if (one) node.spouses.push(one);
+        delete node.spouse;
       }
+
+      if (!Array.isArray(node.spouses)) node.spouses = [];
+      node.spouses = node.spouses.map(normalizeSpouseObj).filter(Boolean);
 
       node.children.forEach(normalizeNode);
     }
@@ -1316,18 +1327,40 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
     function findInChildren(parentNode, id, depth){
       if (!parentNode) return null;
 
-      if (parentNode.spouse && parentNode.spouse.id === id) {
-        return { node: parentNode.spouse, parent: parentNode, parentChildrenArray: null, depth, isSpouse:true };
+      // 1) Esposas (como nodos)
+      if (Array.isArray(parentNode.spouses)) {
+        for (let i=0; i<parentNode.spouses.length; i++){
+          const sp = parentNode.spouses[i];
+
+          // si el id es de la esposa
+          if (sp && sp.id === id) {
+            return { node: sp, parent: parentNode, parentChildrenArray: null, depth, isSpouse:true, spouseIndex: i };
+          }
+
+          // 2) Hijos de ESA esposa
+          if (Array.isArray(sp?.children) && sp.children.length){
+            for (const ch of sp.children){
+              if (ch.id === id) {
+                return { node: ch, parent: parentNode, parentChildrenArray: sp.children, depth: depth+1, isSpouse:false, unionSpouseId: sp.id };
+              }
+              const deeper = findInChildren(ch, id, depth + 2);
+              if (deeper) return deeper;
+            }
+          }
+        }
       }
 
-      if (!parentNode.children?.length) return null;
-      for (const child of parentNode.children) {
-        if (child.id === id) {
-          return { node: child, parent: parentNode, parentChildrenArray: parentNode.children, depth, isSpouse:false };
+      // 3) Hijos sin esposa asociada
+      if (Array.isArray(parentNode.children) && parentNode.children.length){
+        for (const child of parentNode.children) {
+          if (child.id === id) {
+            return { node: child, parent: parentNode, parentChildrenArray: parentNode.children, depth, isSpouse:false, unionSpouseId: null };
+          }
+          const deeper = findInChildren(child, id, depth + 1);
+          if (deeper) return deeper;
         }
-        const deeper = findInChildren(child, id, depth + 1);
-        if (deeper) return deeper;
       }
+
       return null;
     }
 
@@ -1353,24 +1386,15 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
     }
 
     function addChildTo(parentId){
-      // Si agregan desde p1/p2 => agrega a la 1ª generación (state.children)
-      if (parentId === "p1" || parentId === "p2") {
-        if (LOCKS_ENABLED) {
-          alert("Bloqueado: no se agregan hijos de 1ª generación.");
-          return;
-        }
-        const nextIndex = (state.children?.length || 0) + 1;
-        const child = makePerson({ role: `Hijo/a ${nextIndex}` });
-        state.children.push(child);
-        renderAll();
-        scheduleSave();
-        return;
-      }
-
       const hit = findNodeById(parentId);
       if (!hit?.node) return;
-      if (hit.isSpouse) return;
 
+      // si estoy parado en esposa, agrega hijo a ESA esposa
+      if (hit.isSpouse) {
+        return addChildToSpouse(hit.node.id);
+      }
+
+      // agrega hijo SIN esposa (bloque general)
       const parent = hit.node;
       if (!Array.isArray(parent.children)) parent.children = [];
 
@@ -1383,18 +1407,34 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
     }
 
     function addSpouseTo(ownerId){
-      if (ownerId === "p1" || ownerId === "p2") return;
       const hit = findNodeById(ownerId);
       if (!hit?.node || hit.isSpouse) return;
 
-      if (hit.node.spouse) {
-        openEditor(hit.node.spouse.id);
-        return;
-      }
-      hit.node.spouse = makeSpouse();
+      if (!Array.isArray(hit.node.spouses)) hit.node.spouses = [];
+      const sp = makeSpouse();
+      hit.node.spouses.push(sp);
+
       renderAll();
       scheduleSave();
-      openEditor(hit.node.spouse.id);
+      openEditor(sp.id);
+    }
+
+    function addChildToSpouse(spouseId){
+      const hit = findNodeById(spouseId);
+      if (!hit?.node || !hit.isSpouse || !hit.parent) return;
+
+      const owner = hit.parent;
+      const sp = owner.spouses?.[hit.spouseIndex];
+      if (!sp) return;
+
+      if (!Array.isArray(sp.children)) sp.children = [];
+      const nextIndex = sp.children.length + 1;
+      const child = makePerson({ role: `Hijo/a ${nextIndex}` });
+      sp.children.push(child);
+
+      renderAll();
+      scheduleSave();
+      openEditor(spouseId);
     }
 
     function removeSpouse(spouseId){
@@ -1402,10 +1442,14 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       if (!hit?.node || !hit.isSpouse || !hit.parent) return;
 
       const ownerName = (hit.parent.name || hit.parent.role || hit.parent.id);
-      const ok = confirm(`¿Quitar pareja de "${ownerName}"?`);
+      const who = (hit.node.name || hit.node.role || hit.node.id);
+
+      const ok = confirm(`¿Quitar "${who}" de "${ownerName}"?\n\nSe eliminarán también los hijos asociados a esta unión.`);
       if (!ok) return;
 
-      hit.parent.spouse = null;
+      if (!Array.isArray(hit.parent.spouses)) return;
+      hit.parent.spouses.splice(hit.spouseIndex, 1);
+
       renderAll();
       scheduleSave();
     }
@@ -1414,35 +1458,29 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       const hit = findNodeById(id);
       if (!hit) return;
 
-      // Parejas: siempre se pueden quitar
-      if (hit.isSpouse) {
-        return removeSpouse(id);
-      }
+      if (hit.isSpouse) return removeSpouse(id);
 
-      if (isProtectedPersonId(id)) {
-        return alert("No se pueden eliminar los padres (y, si activas LOCKS, tampoco los 11 originales).");
-      }
+      if (id === "p1" || id === "p2") return alert("No se pueden eliminar los padres.");
 
       if (LOCKS_ENABLED) {
-        return alert("Bloqueado: no se eliminan personas. Solo puedes quitar parejas.");
+        return alert("Bloqueado: no se eliminan personas.");
       }
 
-      const who = (hit.node.name || hit.node.role || hit.node.id);
-      const ok = confirm(`¿Eliminar a "${who}" y todo su subárbol?`);
+      if (!hit.parentChildrenArray) return;
+
+      const who = (hit.node?.name && hit.node.name.trim())
+        ? hit.node.name.trim()
+        : (hit.node?.role || id);
+
+      const ok = confirm(`¿Eliminar a "${who}"?\n\nEsto elimina a esta persona y sus descendientes.`);
       if (!ok) return;
 
-      // Root (state.children) o cualquier parent.children
-      if (hit.parentChildrenArray) {
-        const idx = hit.parentChildrenArray.findIndex(x => x && x.id === id);
-        if (idx >= 0) hit.parentChildrenArray.splice(idx, 1);
+      const idx = hit.parentChildrenArray.findIndex(x => x.id === id);
+      if (idx >= 0) {
+        hit.parentChildrenArray.splice(idx, 1);
         renderAll();
         scheduleSave();
-        return;
       }
-
-      // Si llegara aquí, no sabemos dónde está (p1/p2 o error)
-      renderAll();
-      scheduleSave();
     }
     /* =========================================================
        FIN BLOQUE: FIND / PATCH / ADD / REMOVE
@@ -1458,15 +1496,11 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
 
       const n = hit.node;
       const title = (n.name && n.name.trim()) ? n.name.trim() : (n.role || "Editar");
-      editorTitle.textContent = hit.isSpouse ? `Editar pareja: ${title}` : `Editar: ${title}`;
+      editorTitle.textContent = hit.isSpouse ? `Editar esposa/pareja: ${title}` : `Editar: ${title}`;
 
       editorBody.innerHTML = "";
 
-      // ✅ Coherente con LOCKS:
-      // - Pareja: siempre "Quitar pareja"
-      // - Persona: botón Eliminar solo si LOCKS desactivado y no es p1/p2 (y no está protegido)
-      const removable = (!hit.isSpouse) && (!LOCKS_ENABLED) && (!isProtectedPersonId(nodeId));
-
+      const removable = (!hit.isSpouse) && (!LOCKS_ENABLED) && (nodeId !== "p1" && nodeId !== "p2");
       const card = editorPersonCard(n, { removable, isSpouse: hit.isSpouse });
 
       if (nodeId === "p1" || nodeId === "p2") card.classList.add("parent-card");
@@ -1493,33 +1527,41 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
 
       const imgSrc = node.photo_url || placeholderImg;
 
-      const canAddSpouse = (!isSpouse) && (node.id !== "p1") && (node.id !== "p2");
-      const hasSpouse = (!!node.spouse);
-
-      const spouseBtns = canAddSpouse
-        ? (hasSpouse
-            ? `<button class="smallbtn spouse" data-action="editSpouse" type="button">Ver/editar pareja</button>`
-            : `<button class="smallbtn spouse" data-action="addSpouse" type="button">+ Agregar pareja</button>`)
-        : "";
-
-      const spouseRemoveBtn = isSpouse
-        ? `<button class="smallbtn remove" data-action="removeSpouse" type="button">Quitar pareja</button>`
+      const topRightBtn = isSpouse
+        ? `<button class="smallbtn remove" data-action="removeSpouse" type="button">Quitar</button>`
         : (removable ? `<button class="smallbtn remove" data-action="remove" type="button">Eliminar</button>` : `<span></span>`);
 
-      // Agregar hijo:
-      // - Parejas: no
-      // - Con LOCKS: no dejar agregar desde p1/p2 (bloquea 1ª generación)
-      const canAddKid = (!isSpouse) && (!LOCKS_ENABLED || (node.id !== "p1" && node.id !== "p2"));
-      const addKidBtn = canAddKid
-        ? `<button class="smallbtn addkid" data-action="addChild" type="button">+ Agregar hijo/a</button>`
-        : ``;
+      const addKidBtn = `<button class="smallbtn addkid" data-action="addChild" type="button">+ Agregar hijo/a</button>`;
+      const addSpouseBtn = (!isSpouse) ? `<button class="smallbtn spouse" data-action="addSpouse" type="button">+ Agregar esposa/pareja</button>` : ``;
 
       const cardName = (node.name && node.name.trim()) ? node.name.trim() : "Sin nombre";
+
+      // listado de esposas en el editor del dueño
+      let spousesHtml = "";
+      if (!isSpouse && Array.isArray(node.spouses) && node.spouses.length){
+        spousesHtml = `
+          <div class="spouseList">
+            <div style="font-size:12px; font-weight:900; color:var(--muted);">Esposas/Parejas</div>
+            ${node.spouses.map(s => {
+              const nm = (s.name && s.name.trim()) ? s.name.trim() : "Sin nombre";
+              return `
+                <div class="spouseItem">
+                  <b>${escapeHtml(nm)}</b>
+                  <div class="spouseBtns">
+                    <button class="smallbtn spouse" data-action="openSpouse:${escapeAttr(s.id)}" type="button">Editar</button>
+                    <button class="smallbtn addkid" data-action="addChildSpouse:${escapeAttr(s.id)}" type="button">+ Hijo</button>
+                  </div>
+                </div>
+              `;
+            }).join("")}
+          </div>
+        `;
+      }
 
       el.innerHTML = `
         <div class="role">
           <b>${escapeHtml(cardName)}</b>
-          ${spouseRemoveBtn}
+          ${topRightBtn}
         </div>
 
         <div class="row">
@@ -1529,8 +1571,7 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
 
           <div class="photo-actions">
             ${addKidBtn}
-            ${spouseBtns}
-            <!-- ✅ Quitado el botón "Quitar foto" -->
+            ${addSpouseBtn}
           </div>
         </div>
 
@@ -1545,6 +1586,8 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
             <input type="date" data-field="death" value="${escapeAttr(node.death || "")}">
           </label>
         </div>
+
+        ${spousesHtml}
 
         <div class="footer">
           <span></span>
@@ -1574,8 +1617,14 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
           addSpouseTo(node.id);
           return;
         }
-        if (action === "editSpouse") {
-          if (node.spouse?.id) openEditor(node.spouse.id);
+        if (action.startsWith("openSpouse:")) {
+          const sid = action.split(":")[1];
+          openEditor(sid);
+          return;
+        }
+        if (action.startsWith("addChildSpouse:")) {
+          const sid = action.split(":")[1];
+          addChildToSpouse(sid);
           return;
         }
         if (action === "removeSpouse") {
@@ -1590,7 +1639,6 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
         }
       });
 
-      // ✅ NO re-render por tecla (evita “se salta” en celular)
       el.addEventListener("input", (e) => {
         const input = e.target;
         if (!(input instanceof HTMLInputElement)) return;
@@ -1598,9 +1646,7 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
         if (!field) return;
 
         patchNode(node.id, { [field]: input.value }, { render:false });
-
         if (field === "birth") renderBirthdays();
-
         scheduleSave();
       });
 
@@ -1612,7 +1658,7 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
 
 
     /* =========================================================
-       INICIO BLOQUE: RENDER ÁRBOL (nodos / subárbol)
+       INICIO BLOQUE: RENDER ÁRBOL (HIJOS POR ESPOSA)
        ========================================================= */
     function renderNodeCircle(node, cls){
       const el = document.createElement("div");
@@ -1639,11 +1685,14 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
     function renderPersonUnit(node, cls){
       const unit = document.createElement("div");
       unit.className = "personUnit";
+
       unit.appendChild(renderNodeCircle(node, cls));
 
-      if (node.spouse) {
-        unit.appendChild(renderNodeCircle(node.spouse, `${cls} spouseNode`));
-      }
+      const spouses = Array.isArray(node.spouses) ? node.spouses : [];
+      spouses.forEach((sp) => {
+        unit.appendChild(renderNodeCircle(sp, `${cls} spouseNode`));
+      });
+
       return unit;
     }
 
@@ -1660,30 +1709,62 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       return Math.min(4, n);
     }
 
-    function renderSubtree(node, depth = 0, { isOriginal = false } = {}) {
+    function renderChildrenGroup(children, depth){
+      const group = document.createElement("div");
+      group.className = "childrenGroup";
+
+      const row = document.createElement("div");
+      row.className = "childrenRow";
+      row.style.setProperty("--cols", String(colsForKids(children.length)));
+
+      children.forEach(ch => {
+        const cw = document.createElement("div");
+        cw.className = "childWrap";
+        cw.appendChild(renderSubtree(ch, depth + 1));
+        row.appendChild(cw);
+      });
+
+      group.appendChild(row);
+      return group;
+    }
+
+    function renderSubtree(node, depth = 0) {
       const wrap = document.createElement("div");
       wrap.className = "subtree";
 
-      const cls = isOriginal ? "lvl-original" : depthClass(depth);
+      const cls = depth === 0 ? "lvl-original" : depthClass(depth);
       wrap.appendChild(renderPersonUnit(node, cls));
 
+      // 1) hijos por esposa (bloques separados)
+      const spouses = Array.isArray(node.spouses) ? node.spouses : [];
+      spouses.forEach((sp) => {
+        if (Array.isArray(sp.children) && sp.children.length > 0 && depth < MAX_DEPTH) {
+          const block = document.createElement("div");
+          block.className = "unionBlock";
+
+          const cap = document.createElement("div");
+          cap.className = "unionCaption";
+          const nm = (sp.name && sp.name.trim()) ? sp.name.trim() : "Esposa/Pareja";
+          cap.textContent = `Hijos con ${nm}`;
+          block.appendChild(cap);
+
+          block.appendChild(renderChildrenGroup(sp.children, depth));
+          wrap.appendChild(block);
+        }
+      });
+
+      // 2) hijos sin esposa asociada (si existen)
       if (Array.isArray(node.children) && node.children.length > 0 && depth < MAX_DEPTH) {
-        const group = document.createElement("div");
-        group.className = "childrenGroup";
+        const block = document.createElement("div");
+        block.className = "unionBlock";
 
-        const row = document.createElement("div");
-        row.className = "childrenRow";
-        row.style.setProperty("--cols", String(colsForKids(node.children.length)));
+        const cap = document.createElement("div");
+        cap.className = "unionCaption";
+        cap.textContent = `Hijos`;
+        block.appendChild(cap);
 
-        node.children.forEach(ch => {
-          const cw = document.createElement("div");
-          cw.className = "childWrap";
-          cw.appendChild(renderSubtree(ch, depth + 1, { isOriginal: false }));
-          row.appendChild(cw);
-        });
-
-        group.appendChild(row);
-        wrap.appendChild(group);
+        block.appendChild(renderChildrenGroup(node.children, depth));
+        wrap.appendChild(block);
       }
 
       return wrap;
@@ -1694,13 +1775,14 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
 
 
     /* =========================================================
-       INICIO BLOQUE: RENDER PORTADA (Nuestra Historia)
+       INICIO BLOQUE: RENDER PORTADA
        ========================================================= */
     function renderCover(){
       if (coverImg) coverImg.src = state.cover_photo_url || placeholderCover;
 
       if (!first11Strip) return;
       first11Strip.innerHTML = "";
+
       const first11 = (state.children || []).slice(0, 11);
       first11.forEach((p, idx) => {
         const chip = document.createElement("div");
@@ -1709,7 +1791,7 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
         img.src = p.photo_url || placeholderImg;
         img.alt = `Hijo ${idx+1}`;
         const name = document.createElement("span");
-        name.textContent = (p.name && p.name.trim()) ? p.name.trim() : `Hijo ${idx+1}`;
+        name.textContent = (p.name && p.name.trim()) ? p.name.trim() : `Persona ${idx+1}`;
         chip.appendChild(img);
         chip.appendChild(name);
         chip.addEventListener("click", () => openEditor(p.id));
@@ -1723,6 +1805,7 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
 
     /* =========================================================
        INICIO BLOQUE: CUMPLEAÑOS (SIN AÑOS, FILTRA POR MES)
+       - incluye hijos de esposas y esposas
        ========================================================= */
     function parseYMD(ymd){
       if (!ymd || typeof ymd !== "string") return null;
@@ -1747,25 +1830,18 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       const walk = (node) => {
         const p = parseYMD(node.birth);
         if (p){
-          out.push({
-            id: node.id,
-            name: (node.name || "").trim() || "Sin nombre",
-            photo_url: node.photo_url || placeholderImg,
-            m: p.m, d: p.d
-          });
+          out.push({ id: node.id, name: (node.name||"").trim() || "Sin nombre", photo_url: node.photo_url || placeholderImg, m: p.m, d: p.d });
         }
-        if (node.spouse){
-          const s = node.spouse;
-          const sp = parseYMD(s.birth);
-          if (sp){
-            out.push({
-              id: s.id,
-              name: (s.name || "").trim() || "Sin nombre",
-              photo_url: s.photo_url || placeholderImg,
-              m: sp.m, d: sp.d
-            });
+
+        const spouses = Array.isArray(node.spouses) ? node.spouses : [];
+        spouses.forEach(sp => {
+          const spd = parseYMD(sp.birth);
+          if (spd){
+            out.push({ id: sp.id, name: (sp.name||"").trim() || "Sin nombre", photo_url: sp.photo_url || placeholderImg, m: spd.m, d: spd.d });
           }
-        }
+          (sp.children || []).forEach(walk);
+        });
+
         (node.children || []).forEach(walk);
       };
 
@@ -1813,7 +1889,7 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       bdayMonthEl.textContent = monthNameEs(m);
 
       const all = collectBirthdays().filter(p => p.m === m);
-      const map = new Map(); // day -> people[]
+      const map = new Map();
       all.forEach(p => {
         const arr = map.get(p.d) || [];
         arr.push(p);
@@ -1899,8 +1975,9 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
         cw.className = "coupleWrap";
         parentsGen.appendChild(cw);
 
-        cw.appendChild(renderNodeCircle(state.parents[0], "lvl-parent"));
-        cw.appendChild(renderNodeCircle(state.parents[1], "lvl-parent"));
+        // padres como dos nodos (cada uno puede tener sus esposas si quieres)
+        cw.appendChild(renderPersonUnit(state.parents[0], "lvl-parent"));
+        cw.appendChild(renderPersonUnit(state.parents[1], "lvl-parent"));
       }
 
       if (childrenGen){
@@ -1912,7 +1989,7 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
         kids.forEach((k, idx) => {
           const col = document.createElement("div");
           col.className = "treeCol";
-          col.appendChild(renderSubtree(k, 0, { isOriginal: idx < 11 }));
+          col.appendChild(renderSubtree(k, 0));
           grid.appendChild(col);
         });
 
@@ -1954,7 +2031,7 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
 
 
     /* =========================================================
-       INICIO BLOQUE: SUBIR FOTOS (cover o persona)
+       INICIO BLOQUE: SUBIR FOTOS (cover o persona/esposa)
        ========================================================= */
     filePicker.addEventListener("change", async () => {
       const file = filePicker.files?.[0];
@@ -2026,7 +2103,7 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
 
 
     /* =========================================================
-       INICIO BLOQUE: GUARDADO (debounced) + SUPABASE
+       INICIO BLOQUE: GUARDADO + SUPABASE
        ========================================================= */
     function scheduleSave(){
       if (!supabase) return;
@@ -2131,35 +2208,32 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
 
 
     /* =========================================================
-       INICIO BLOQUE: BUSCADOR (incluye parejas)
+       INICIO BLOQUE: BUSCADOR (incluye esposas + hijos de esposas)
        ========================================================= */
     function collectPeople(){
       const out = [];
-      const walk = (node, depth, rootId) => {
+      const walk = (node) => {
         out.push({
           id: node.id,
           name: (node.name || "").trim(),
-          role: node.role || "",
-          depth,
-          rootId: rootId || node.id,
           photo_url: node.photo_url || placeholderImg
         });
 
-        if (node.spouse) {
+        const spouses = Array.isArray(node.spouses) ? node.spouses : [];
+        spouses.forEach(s => {
           out.push({
-            id: node.spouse.id,
-            name: (node.spouse.name || "").trim(),
-            role: node.spouse.role || "Pareja",
-            depth,
-            rootId: rootId || node.id,
-            photo_url: node.spouse.photo_url || placeholderImg
+            id: s.id,
+            name: (s.name || "").trim(),
+            photo_url: s.photo_url || placeholderImg
           });
-        }
+          (s.children || []).forEach(walk);
+        });
 
-        (node.children || []).forEach(ch => walk(ch, depth + 1, rootId || node.id));
+        (node.children || []).forEach(walk);
       };
-      state.parents.forEach(p => walk(p, 0, p.id));
-      (state.children || []).forEach(c => walk(c, 1, c.id));
+
+      state.parents.forEach(walk);
+      (state.children || []).forEach(walk);
       return out;
     }
 
@@ -2252,14 +2326,10 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
     let baseW = 1, baseH = 1;
 
     function clamp(v, a, b){ return Math.max(a, Math.min(b, v)); }
-
-    function updateZoomLabel(){
-      zoomLabel.textContent = `${Math.round(zoom*100)}%`;
-    }
+    function updateZoomLabel(){ zoomLabel.textContent = `${Math.round(zoom*100)}%`; }
 
     function measureBase(){
       if (!isTreeTabActive()) return 1;
-
       baseW = Math.max(1, zoomContent.scrollWidth);
       baseH = Math.max(1, zoomContent.scrollHeight);
       const fit = Math.min(zoomViewport.clientWidth / baseW, zoomViewport.clientHeight / baseH);
@@ -2271,7 +2341,6 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       if (!isTreeTabActive()) return;
 
       measureBase();
-
       const vpRect = zoomViewport.getBoundingClientRect();
       const cx = center ? (vpRect.left + zoomViewport.clientWidth/2) : (clientX ?? (vpRect.left + zoomViewport.clientWidth/2));
       const cy = center ? (vpRect.top  + zoomViewport.clientHeight/2): (clientY ?? (vpRect.top  + zoomViewport.clientHeight/2));
@@ -2280,7 +2349,6 @@ para que ilumine tanto a quienes las leen ahora como a quienes aún no han nacid
       const py = (zoomViewport.scrollTop  + (cy - vpRect.top )) / zoom;
 
       zoom = clamp(newZoom, minZoom, maxZoom);
-
       zoomContent.style.transform = `scale(${zoom})`;
       zoomSpacer.style.width  = (baseW * zoom) + "px";
       zoomSpacer.style.height = (baseH * zoom) + "px";
